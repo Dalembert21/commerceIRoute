@@ -11,6 +11,8 @@ dist/
 .npm/
 
 # IDEs y SO
+.vs/
+**/.vs/
 .vscode/
 .idea/
 *.DS_Store

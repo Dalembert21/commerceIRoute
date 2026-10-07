@@ -1,8 +1,11 @@
 <div class="pantalla-login">
   <div class="tarjeta-login">
     <div class="cabecera-login">
-      <h1 class="titulo-login">IRoute</h1>
-      <p class="subtitulo-login">Acceso</p>
+      <div class="marca-login">
+        <img src="iroute.svg" alt="Logo iRoute" class="logo-login" />
+        <h1 class="titulo-login">iRoute</h1>
+      </div>
+      <p class="subtitulo-login">Solutions</p>
     </div>
 
     @if (errorMensaje) {
@@ -28,7 +31,7 @@
     </form>
 
     <div class="credenciales-demo">
-      <span class="titulo-demo">Para ingresar con:</span>
+      <span class="titulo-demo">Credenciales:</span>
       <button type="button" class="boton-demo-chip" (click)="rellenarCredenciales('admin', '123456')">
         admin / 123456
       </button>

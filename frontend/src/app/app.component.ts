@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BarraNavegacionComponent } from './componentes/barra-navegacion/barra-navegacion.component';
+import { AutenticacionServicio } from './servicios/autenticacion.servicio';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +11,6 @@ import { BarraNavegacionComponent } from './componentes/barra-navegacion/barra-n
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  titulo = 'IRoute Comercio';
+  servicioAuth = inject(AutenticacionServicio);
+  titulo = 'iRoute Comercio';
 }

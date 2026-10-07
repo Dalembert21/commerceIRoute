@@ -1,11 +1,15 @@
 <div class="contenedor-aplicacion">
-  <app-barra-navegacion></app-barra-navegacion>
+  @if (servicioAuth.estaAutenticado()) {
+    <app-barra-navegacion></app-barra-navegacion>
+  }
   <main class="cuerpo-principal">
     <router-outlet></router-outlet>
   </main>
-  <footer class="pie-pagina">
-    <div class="contenido-pie">
-      <p>IRoute</p>
-    </div>
-  </footer>
+  @if (servicioAuth.estaAutenticado()) {
+    <footer class="pie-pagina">
+      <div class="contenido-pie">
+        <p>iRoute Comercios &copy; 2026</p>
+      </div>
+    </footer>
+  }
 </div>
