@@ -1,10 +1,4 @@
-# Sistema de Gestión y Validación de Comercios (IRoute)
 
-Solución técnica desarrollada para la evaluación de **.NET (Back End)**, **SQL Server (Base de Datos)** y **Angular (Front End)**.
-
-Todo el código, nombres de tablas, columnas, clases, métodos y textos de la interfaz han sido implementados en **español** con nombres descriptivos.
-
----
 
 ## 1. Arquitectura del Proyecto
 
@@ -23,7 +17,7 @@ proyectoIRoute/
 │   ├── src/app/componentes/    # Carga CSV, Procesar Fecha, Cuarentena, Comercios Válidos, Login
 │   ├── src/app/servicios/      # ComercioServicio y AutenticacionServicio
 │   ├── src/app/modelos/        # Interfaces TypeScript
-│   └── src/styles.css          # Estilos oficiales con la paleta de Angular
+│   └── src/styles.css          # Estilos Angular
 └── commerce_07102026.csv        # Archivo CSV de prueba con datos válidos e inválidos
 ```
 
@@ -60,7 +54,7 @@ Endpoints en [`ComerciosControlador.cs`](backend/Controladores/ComerciosControla
 
 ## 4. Front End (Angular)
 
-Desarrollado con componentes independientes y la paleta de colores oficial de Angular:
+
 * **Carga y Previsualización (`/cargar-archivo`):** Permite previsualizar el archivo CSV en una tabla antes de enviarlo.
 * **Procesar por Fecha (`/procesar-fecha`):** Ejecuta la validación para la fecha indicada.
 * **Cuarentena (`/cuarentena`):** Muestra los registros observados, el motivo y un buscador en tiempo real.
