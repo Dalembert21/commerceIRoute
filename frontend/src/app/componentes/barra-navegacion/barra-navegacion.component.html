@@ -1,0 +1,32 @@
+<header class="cabecera">
+  <div class="contenedor-cabecera">
+    <div class="marca">
+      <span class="nombre-marca">IRoute</span>
+      <span class="subtexto-marca">Comercios</span>
+    </div>
+
+    <nav class="navegacion">
+      <a routerLink="/cargar-archivo" routerLinkActive="enlace-activo" class="enlace-nav">
+        Cargar CSV
+      </a>
+      <a routerLink="/procesar-fecha" routerLinkActive="enlace-activo" class="enlace-nav">
+        Procesar por Fecha
+      </a>
+      <a routerLink="/cuarentena" routerLinkActive="enlace-activo" class="enlace-nav">
+        Cuarentena
+      </a>
+      <a routerLink="/comercios-activos" routerLinkActive="enlace-activo" class="enlace-nav">
+        Comercios Válidos
+      </a>
+    </nav>
+
+    <div class="area-usuario">
+      @if (servicioAuth.usuarioActual(); as usuario) {
+        <span class="nombre-usuario">{{ usuario.nombreCompleto }}</span>
+        <button class="boton-cerrar" (click)="cerrarSesion()">Cerrar sesión</button>
+      } @else {
+        <a routerLink="/iniciar-sesion" class="enlace-nav">Ingresar</a>
+      }
+    </div>
+  </div>
+</header>

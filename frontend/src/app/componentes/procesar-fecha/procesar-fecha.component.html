@@ -1,0 +1,100 @@
+<div class="contenedor-principal">
+  <div class="encabezado-pantalla">
+    <h1 class="titulo-seccion">Procesamiento de Comercios por Fecha</h1>
+    <p class="subtitulo-seccion">
+      Valida los comercios cargados para la fecha <code>pc_processdate</code> y envía a cuarentena los que tengan errores.
+    </p>
+  </div>
+
+  @if (mensajeError) {
+    <div class="alerta alerta-peligro">
+      <p><strong>Error:</strong> {{ mensajeError }}</p>
+    </div>
+  }
+
+  <div class="cuadricula-procesamiento">
+    <!-- Formulario para ingresar la fecha -->
+    <div class="tarjeta">
+      <h2 class="titulo-formulario">Fecha a Procesar</h2>
+      <p class="descripcion-formulario">
+        Ingrese la fecha de proceso (por ejemplo: <code>07/10/2026</code>).
+      </p>
+
+      <form (ngSubmit)="procesarPorFecha()">
+        <div class="campo-formulario">
+          <label class="etiqueta-campo" for="fechaProceso">Fecha (pc_processdate)</label>
+          <input
+            id="fechaProceso"
+            type="text"
+            class="entrada-texto"
+            placeholder="Ejemplo: 07/10/2026"
+            [(ngModel)]="fechaProceso"
+            name="fechaProceso"
+            required
+          />
+        </div>
+
+        @if (fechasDetectadas.length > 0) {
+          <div class="fechas-sugeridas">
+            <span class="etiqueta-sugerencias">Fechas encontradas en la tabla:</span>
+            <div class="lista-chips">
+              @for (fecha of fechasDetectadas; track fecha) {
+                <button
+                  type="button"
+                  class="chip-fecha"
+                  [class.chip-activo]="fechaProceso === fecha"
+                  (click)="fechaProceso = fecha">
+                  {{ fecha }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="boton boton-primario ancho-completo"
+          [disabled]="!fechaProceso.trim() || procesando">
+          @if (procesando) {
+            <span class="spinner"></span>
+            Procesando registros...
+          } @else {
+            Ejecutar Validación por Fecha
+          }
+        </button>
+      </form>
+    </div>
+
+    <!-- Resultado devuelto por el store procedure -->
+    <div class="tarjeta panel-resultado">
+      <h2 class="titulo-formulario">Resultado</h2>
+
+      @if (resultado) {
+        <div class="contenido-resultado">
+          <div class="contador-cuarentena">{{ resultado.registrosEnCuarentena }}</div>
+          <span class="descripcion-contador">Registros enviados a Cuarentena</span>
+
+          <div class="detalles-resultado">
+            <p><strong>Fecha procesada:</strong> {{ resultado.fechaProceso }}</p>
+            <p>{{ resultado.mensaje }}</p>
+          </div>
+
+          <div class="acciones-resultado">
+            @if (resultado.registrosEnCuarentena > 0) {
+              <a routerLink="/cuarentena" class="boton boton-peligro ancho-completo">
+                Ver Registros en Cuarentena &rarr;
+              </a>
+            }
+            <a routerLink="/comercios-activos" class="boton boton-contorno ancho-completo">
+              Ver Comercios Válidos
+            </a>
+          </div>
+        </div>
+      } @else {
+        <div class="estado-vacio">
+          <p>Ingrese una fecha y presione el botón para ejecutar la validación.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

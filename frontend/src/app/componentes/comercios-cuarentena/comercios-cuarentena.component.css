@@ -1,0 +1,71 @@
+.encabezado-pantalla {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+.fila-metricas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.tarjeta-metrica {
+  background: white;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+.borde-peligro { border-left: 4px solid var(--color-peligro); }
+.borde-alerta { border-left: 4px solid var(--color-alerta); }
+.borde-info { border-left: 4px solid var(--color-acento); }
+
+.valor-metrica-lg {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-texto);
+  line-height: 1.1;
+}
+.etiqueta-metrica-lg {
+  font-size: 0.8rem;
+  color: var(--color-texto-secundario);
+  margin-top: 0.25rem;
+}
+.barra-filtros {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+}
+.entrada-busqueda {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  background: transparent;
+}
+.celda-centrada {
+  text-align: center;
+  padding: 3rem 1rem !important;
+  color: var(--color-texto-secundario);
+}
+.texto-vacio {
+  color: var(--color-peligro);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.insignia-motivo {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radio-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+@media (max-width: 900px) {
+  .fila-metricas {
+    grid-template-columns: 1fr;
+  }
+}

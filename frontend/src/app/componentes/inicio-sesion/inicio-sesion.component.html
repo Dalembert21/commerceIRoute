@@ -1,0 +1,37 @@
+<div class="pantalla-login">
+  <div class="tarjeta-login">
+    <div class="cabecera-login">
+      <h1 class="titulo-login">IRoute</h1>
+      <p class="subtitulo-login">Acceso</p>
+    </div>
+
+    @if (errorMensaje) {
+    <div class="alerta alerta-peligro">
+      <span>{{ errorMensaje }}</span>
+    </div>
+    }
+
+    <form (ngSubmit)="iniciarSesion()">
+      <div class="campo-formulario">
+        <label class="etiqueta-campo" for="usuario">Usuario</label>
+        <input id="usuario" type="text" class="entrada-texto" [(ngModel)]="usuario" name="usuario" required />
+      </div>
+
+      <div class="campo-formulario">
+        <label class="etiqueta-campo" for="clave">Contraseña</label>
+        <input id="clave" type="password" class="entrada-texto" [(ngModel)]="clave" name="clave" required />
+      </div>
+
+      <button type="submit" class="boton boton-primario ancho-completo">
+        Ingresar
+      </button>
+    </form>
+
+    <div class="credenciales-demo">
+      <span class="titulo-demo">Para ingresar con:</span>
+      <button type="button" class="boton-demo-chip" (click)="rellenarCredenciales('admin', '123456')">
+        admin / 123456
+      </button>
+    </div>
+  </div>
+</div>

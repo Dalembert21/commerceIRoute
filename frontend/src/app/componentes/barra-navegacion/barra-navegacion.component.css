@@ -1,0 +1,70 @@
+.cabecera {
+  background: var(--color-primario);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.contenedor-cabecera {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.marca {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.nombre-marca {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+}
+.subtexto-marca {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+.navegacion {
+  display: flex;
+  gap: 0.25rem;
+}
+.enlace-nav {
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radio-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  opacity: 0.9;
+  transition: opacity 0.2s, background-color 0.2s;
+}
+.enlace-nav:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+.enlace-activo {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+}
+.area-usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+}
+.boton-cerrar {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+.boton-cerrar:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

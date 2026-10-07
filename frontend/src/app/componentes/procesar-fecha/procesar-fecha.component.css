@@ -1,0 +1,101 @@
+.encabezado-pantalla {
+  margin-bottom: 1.5rem;
+}
+.cuadricula-procesamiento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.titulo-formulario {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.descripcion-formulario {
+  font-size: 0.85rem;
+  color: var(--color-texto-secundario);
+  margin-bottom: 1.25rem;
+}
+.fechas-sugeridas {
+  margin-bottom: 1.25rem;
+}
+.etiqueta-sugerencias {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-texto-terciario);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.lista-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.chip-fecha {
+  background: var(--color-superficie-hover);
+  border: 1px solid var(--color-borde);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radio-full);
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+.chip-fecha:hover, .chip-activo {
+  background: var(--color-primario);
+  color: white;
+  border-color: var(--color-primario);
+}
+.ancho-completo {
+  width: 100%;
+}
+.panel-resultado {
+  display: flex;
+  flex-direction: column;
+}
+.estado-vacio {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--color-texto-secundario);
+}
+.contenido-resultado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0;
+}
+.contador-cuarentena {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-peligro);
+  line-height: 1;
+}
+.descripcion-contador {
+  font-size: 0.9rem;
+  color: var(--color-texto-secundario);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.detalles-resultado {
+  background: var(--color-fondo);
+  padding: 1rem;
+  border-radius: var(--radio-sm);
+  width: 100%;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.acciones-resultado {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+@media (max-width: 900px) {
+  .cuadricula-procesamiento {
+    grid-template-columns: 1fr;
+  }
+}

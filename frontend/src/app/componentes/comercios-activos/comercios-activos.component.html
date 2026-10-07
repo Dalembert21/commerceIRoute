@@ -1,0 +1,70 @@
+<div class="contenedor-principal">
+  <div class="encabezado-pantalla">
+    <div>
+      <h1 class="titulo-seccion">Comercios Válidos (Tabla Commerce)</h1>
+      <p class="subtitulo-seccion">
+        Registros que no tuvieron errores y permanecen en la tabla <code>commerce</code>.
+      </p>
+    </div>
+
+    <button class="boton boton-contorno" (click)="cargarComercios()" [disabled]="cargando">
+      Refrescar
+    </button>
+  </div>
+
+  <div class="barra-filtros tarjeta">
+    <input
+      type="text"
+      class="entrada-busqueda"
+      placeholder="Buscar por código, nombre, documento o fecha..."
+      [(ngModel)]="terminoBusqueda"
+    />
+  </div>
+
+  <div class="contenedor-tabla">
+    <table class="tabla-datos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha Proceso</th>
+          <th>Código Comercio</th>
+          <th>Nombre Comercial</th>
+          <th>Número Documento</th>
+          <th>Tipo Documento</th>
+          <th>Estado</th>
+          <th>Fecha Registro</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando) {
+          <tr>
+            <td colspan="8" class="celda-centrada">
+              <span class="spinner"></span> Consultando comercios...
+            </td>
+          </tr>
+        } @else if (comerciosFiltrados.length === 0) {
+          <tr>
+            <td colspan="8" class="celda-centrada">
+              <p>No hay comercios para mostrar.</p>
+            </td>
+          </tr>
+        } @else {
+          @for (c of comerciosFiltrados; track c.id) {
+            <tr>
+              <td>#{{ c.id }}</td>
+              <td>{{ c.fechaProceso }}</td>
+              <td><code>{{ c.codigoComercio || '-' }}</code></td>
+              <td><strong>{{ c.nombreComercial }}</strong></td>
+              <td><code>{{ c.numeroDocumento }}</code></td>
+              <td>{{ c.tipoDocumento || '-' }}</td>
+              <td>
+                <span class="insignia insignia-exito">{{ c.estado || 'ACTIVO' }}</span>
+              </td>
+              <td>{{ c.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

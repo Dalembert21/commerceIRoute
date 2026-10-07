@@ -1,0 +1,118 @@
+.encabezado-pantalla {
+  margin-bottom: 1.5rem;
+}
+.cuadricula-carga {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.zona-subida {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  border: 2px dashed var(--color-borde-fuerte);
+  text-align: center;
+  background: #fafafa;
+}
+.zona-activa {
+  border-color: var(--color-acento);
+  background-color: var(--color-acento-claro);
+}
+.icono-subida {
+  color: var(--color-acento);
+  margin-bottom: 1rem;
+}
+.titulo-subida {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+.descripcion-subida {
+  font-size: 0.85rem;
+  color: var(--color-texto-secundario);
+  margin-bottom: 1.25rem;
+}
+.boton-subir {
+  cursor: pointer;
+}
+.info-archivo {
+  margin-top: 1rem;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--color-borde);
+}
+.detalles-archivo {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+.peso-archivo {
+  font-size: 0.72rem;
+  color: var(--color-texto-terciario);
+}
+.panel-resumen {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.titulo-resumen {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.metricas-resumen {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.caja-metrica {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: var(--color-fondo);
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--color-borde);
+}
+.etiqueta-metrica {
+  font-size: 0.8rem;
+  color: var(--color-texto-secundario);
+}
+.valor-metrica {
+  font-weight: 800;
+}
+.texto-acento {
+  color: var(--color-acento);
+}
+.ancho-completo {
+  width: 100%;
+}
+.seccion-tabla {
+  margin-top: 2rem;
+}
+.cabecera-tabla-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+.subtitulo-tabla {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+.texto-observado {
+  color: var(--color-peligro);
+  font-weight: 700;
+  background-color: var(--color-peligro-claro);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+@media (max-width: 900px) {
+  .cuadricula-carga {
+    grid-template-columns: 1fr;
+  }
+}

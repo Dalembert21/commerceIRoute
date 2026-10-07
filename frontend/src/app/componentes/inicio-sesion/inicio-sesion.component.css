@@ -1,0 +1,58 @@
+.pantalla-login {
+  min-height: calc(100vh - 75px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+}
+.tarjeta-login {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-lg);
+  padding: 2rem;
+  box-shadow: var(--sombra-md);
+}
+.cabecera-login {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.titulo-login {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-primario);
+}
+.subtitulo-login {
+  font-size: 0.85rem;
+  color: var(--color-texto-secundario);
+}
+.ancho-completo {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+.credenciales-demo {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-borde);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.titulo-demo {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-texto-terciario);
+}
+.boton-demo-chip {
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radio-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.boton-demo-chip:hover {
+  background: var(--color-primario-claro);
+  color: var(--color-primario);
+}

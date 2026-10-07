@@ -1,0 +1,144 @@
+<div class="contenedor-principal">
+  <div class="encabezado-pantalla">
+    <h1 class="titulo-seccion">Carga y Previsualización de Archivo</h1>
+    <p class="subtitulo-seccion">
+      Seleccione el archivo CSV para previsualizar los registros antes de enviarlos a la base de datos.
+    </p>
+  </div>
+
+  @if (mensajeExito) {
+    <div class="alerta alerta-exito">
+      <div>
+        <strong>Operación exitosa:</strong>
+        <p>{{ mensajeExito }}</p>
+        <div style="margin-top: 0.5rem;">
+          <a routerLink="/procesar-fecha" class="boton boton-primario">
+            Continuar a Procesar por Fecha &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (mensajeError) {
+    <div class="alerta alerta-peligro">
+      <div>
+        <strong>Error:</strong>
+        <p>{{ mensajeError }}</p>
+      </div>
+    </div>
+  }
+
+  <div class="cuadricula-carga">
+    <div class="tarjeta zona-subida"
+         [class.zona-activa]="estaArrastrando"
+         (dragover)="alArrastrarSobre($event)"
+         (dragleave)="alSalirDeArrastrar($event)"
+         (drop)="alSoltarArchivo($event)">
+      
+      <h3 class="titulo-subida">Arrastre el archivo CSV aquí</h3>
+      <p class="descripcion-subida">
+        Formato requerido: <code>.csv</code> (Ejemplo: <code>commerce_07102026.csv</code>)
+      </p>
+
+      <label class="boton boton-acento boton-subir">
+        <input type="file" accept=".csv" (change)="alSeleccionarArchivo($event)" hidden />
+        Seleccionar archivo
+      </label>
+
+      @if (archivoSeleccionado) {
+        <div class="info-archivo">
+          <div class="detalles-archivo">
+            <span class="nombre-archivo">{{ archivoSeleccionado.name }}</span>
+            <span class="peso-archivo">{{ obtenerTamanoFormateado(archivoSeleccionado.size) }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="tarjeta panel-resumen">
+      <h3 class="titulo-resumen">Resumen del Archivo</h3>
+      <div class="metricas-resumen">
+        <div class="caja-metrica">
+          <span class="etiqueta-metrica">Filas Detectadas</span>
+          <span class="valor-metrica">{{ filasPrevisualizacion.length }}</span>
+        </div>
+        <div class="caja-metrica">
+          <span class="etiqueta-metrica">Estado</span>
+          <span class="valor-metrica">
+            {{ archivoSeleccionado ? 'Listo para Enviar' : 'Esperando Archivo' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="pie-resumen">
+        <button class="boton boton-primario ancho-completo"
+                [disabled]="!archivoSeleccionado || cargando"
+                (click)="enviarAlBackend()">
+          @if (cargando) {
+            <span class="spinner"></span>
+            Enviando a Base de Datos...
+          } @else {
+            Registrar en Tabla Commerce
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if (filasPrevisualizacion.length > 0) {
+    <div class="seccion-tabla">
+      <div class="cabecera-tabla-info">
+        <h2 class="subtitulo-tabla">Previsualización ({{ filasPrevisualizacion.length }} registros)</h2>
+        <span class="insignia insignia-info">Lectura en memoria</span>
+      </div>
+
+      <div class="contenedor-tabla">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Fecha Proceso</th>
+              <th>Código Comercio</th>
+              <th>Nombre Comercial</th>
+              <th>Número Documento</th>
+              <th>Tipo Documento</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (fila of filasPrevisualizacion; track $index) {
+              <tr>
+                <td>{{ $index + 1 }}</td>
+                <td>{{ fila.fechaProceso || '-' }}</td>
+                <td><code>{{ fila.codigoComercio || '-' }}</code></td>
+                <td>
+                  @if (!fila.nombreComercial) {
+                    <span class="texto-observado">[Vacío]</span>
+                  } @else {
+                    {{ fila.nombreComercial }}
+                  }
+                </td>
+                <td>
+                  @if (!fila.numeroDocumento) {
+                    <span class="texto-observado">[Vacío]</span>
+                  } @else if (contieneCaracteresInvalidos(fila.numeroDocumento)) {
+                    <span class="texto-observado">{{ fila.numeroDocumento }}</span>
+                  } @else {
+                    <code>{{ fila.numeroDocumento }}</code>
+                  }
+                </td>
+                <td>{{ fila.tipoDocumento || '-' }}</td>
+                <td>
+                  <span class="insignia" [ngClass]="fila.estado === 'ACTIVO' ? 'insignia-exito' : 'insignia-alerta'">
+                    {{ fila.estado || 'PENDIENTE' }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

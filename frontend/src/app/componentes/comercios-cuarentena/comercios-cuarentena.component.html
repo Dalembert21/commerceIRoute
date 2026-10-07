@@ -1,0 +1,107 @@
+<div class="contenedor-principal">
+  <div class="encabezado-pantalla">
+    <div>
+      <h1 class="titulo-seccion">Registros en Cuarentena (Errores)</h1>
+      <p class="subtitulo-seccion">
+        Muestra los registros de la tabla <code>commerce_quarantine</code> junto con el <strong>motivo</strong> por el que fueron rechazados.
+      </p>
+    </div>
+
+    <div>
+      <button class="boton boton-contorno" (click)="cargarCuarentena()" [disabled]="cargando">
+        Refrescar
+      </button>
+    </div>
+  </div>
+
+  <div class="fila-metricas">
+    <div class="tarjeta-metrica borde-peligro">
+      <span class="valor-metrica-lg">{{ listaCuarentena.length }}</span>
+      <span class="etiqueta-metrica-lg">Total Observados</span>
+    </div>
+
+    <div class="tarjeta-metrica borde-alerta">
+      <span class="valor-metrica-lg">{{ contarPorMotivo('nombre') }}</span>
+      <span class="etiqueta-metrica-lg">Con Nombre Vacío</span>
+    </div>
+
+    <div class="tarjeta-metrica borde-info">
+      <span class="valor-metrica-lg">{{ contarPorMotivo('documento') }}</span>
+      <span class="etiqueta-metrica-lg">Con Documento Inválido</span>
+    </div>
+  </div>
+
+  <div class="barra-filtros tarjeta">
+    <input
+      type="text"
+      class="entrada-busqueda"
+      placeholder="Filtrar por motivo, documento, nombre o código..."
+      [(ngModel)]="terminoBusqueda"
+    />
+  </div>
+
+  @if (mensajeError) {
+    <div class="alerta alerta-peligro">
+      <p>{{ mensajeError }}</p>
+    </div>
+  }
+
+  <div class="contenedor-tabla">
+    <table class="tabla-datos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha Proceso</th>
+          <th>Código Comercio</th>
+          <th>Nombre Comercial</th>
+          <th>Número Documento</th>
+          <th>Motivo del Rechazo</th>
+          <th>Fecha Cuarentena</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (cargando) {
+          <tr>
+            <td colspan="7" class="celda-centrada">
+              <span class="spinner"></span> Cargando registros...
+            </td>
+          </tr>
+        } @else if (registrosFiltrados.length === 0) {
+          <tr>
+            <td colspan="7" class="celda-centrada">
+              <p>No hay registros para mostrar.</p>
+            </td>
+          </tr>
+        } @else {
+          @for (item of registrosFiltrados; track item.id) {
+            <tr>
+              <td>#{{ item.id }}</td>
+              <td>{{ item.fechaProceso }}</td>
+              <td><code>{{ item.codigoComercio || '-' }}</code></td>
+              <td>
+                @if (!item.nombreComercial) {
+                  <span class="texto-vacio">[VACÍO]</span>
+                } @else {
+                  {{ item.nombreComercial }}
+                }
+              </td>
+              <td>
+                @if (!item.numeroDocumento) {
+                  <span class="texto-vacio">[VACÍO]</span>
+                } @else {
+                  <code>{{ item.numeroDocumento }}</code>
+                }
+              </td>
+              <td>
+                <span class="insignia-motivo">
+                  {{ item.motivo }}
+                </span>
+              </td>
+              <td>{{ item.fechaCuarentena | date:'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
