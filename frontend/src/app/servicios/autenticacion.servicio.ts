@@ -2,8 +2,6 @@ import { Injectable, signal } from '@angular/core';
 
 export interface UsuarioSesion {
   nombreUsuario: string;
-  nombreCompleto: string;
-  rol: string;
 }
 
 @Injectable({
@@ -14,11 +12,12 @@ export class AutenticacionServicio {
   usuarioActual = signal<UsuarioSesion | null>(this.obtenerSesionGuardada());
 
   iniciarSesion(nombreUsuario: string, contrasena: string): boolean {
-    if ((nombreUsuario === 'admin' || nombreUsuario === 'evaluador') && contrasena === '123456') {
+    const usuarioLimpio = nombreUsuario?.trim() ?? '';
+    const claveLimpia = contrasena?.trim() ?? '';
+
+    if (usuarioLimpio.length > 0 && claveLimpia.length > 0) {
       const usuario: UsuarioSesion = {
-        nombreUsuario,
-        nombreCompleto: nombreUsuario === 'admin' ? 'Administrador IRoute' : 'Evaluador Técnico',
-        rol: 'Supervisor'
+        nombreUsuario: usuarioLimpio
       };
       localStorage.setItem(this.claveAlmacenamiento, JSON.stringify(usuario));
       this.usuarioActual.set(usuario);

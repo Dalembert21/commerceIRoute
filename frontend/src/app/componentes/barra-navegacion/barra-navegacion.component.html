@@ -22,7 +22,7 @@
 
     <div class="area-usuario">
       @if (servicioAuth.usuarioActual(); as usuario) {
-        <span class="nombre-usuario">{{ usuario.nombreCompleto }}</span>
+        <span class="nombre-usuario">{{ usuario.nombreUsuario }}</span>
         <button class="boton-cerrar" (click)="cerrarSesion()">Cerrar sesión</button>
       } @else {
         <a routerLink="/iniciar-sesion" class="enlace-nav">Ingresar</a>

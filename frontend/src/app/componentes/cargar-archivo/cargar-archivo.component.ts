@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ComercioServicio } from '../../servicios/comercio.servicio';
+import { NotificacionServicio } from '../../servicios/notificacion.servicio';
 
 interface FilaPrevisualizacion {
   pcProcessdate: string;
@@ -21,6 +22,7 @@ interface FilaPrevisualizacion {
 })
 export class CargarArchivoComponent {
   private servicioComercio = inject(ComercioServicio);
+  private servicioNotificacion = inject(NotificacionServicio);
 
   archivoSeleccionado: File | null = null;
   filasPrevisualizacion: FilaPrevisualizacion[] = [];
@@ -159,13 +161,16 @@ export class CargarArchivoComponent {
         this.cargando = false;
         if (resp.exito) {
           this.mensajeExito = resp.mensaje;
+          this.servicioNotificacion.exito(resp.mensaje);
         } else {
           this.mensajeError = resp.mensaje;
+          this.servicioNotificacion.error(resp.mensaje);
         }
       },
       error: (err) => {
         this.cargando = false;
         this.mensajeError = err.error?.mensaje || 'Error al conectar con la API.';
+        this.servicioNotificacion.error(this.mensajeError);
       }
     });
   }

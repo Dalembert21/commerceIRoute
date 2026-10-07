@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ComercioServicio } from '../../servicios/comercio.servicio';
+import { NotificacionServicio } from '../../servicios/notificacion.servicio';
 import { ResultadoProcesoFecha } from '../../modelos/comercio.modelo';
 
 @Component({
@@ -14,6 +15,7 @@ import { ResultadoProcesoFecha } from '../../modelos/comercio.modelo';
 })
 export class ProcesarFechaComponent implements OnInit {
   private servicioComercio = inject(ComercioServicio);
+  private servicioNotificacion = inject(NotificacionServicio);
 
   fechaProceso = '07/10/2026';
   fechasDetectadas: string[] = [];
@@ -58,13 +60,16 @@ export class ProcesarFechaComponent implements OnInit {
         if (resp.exito) {
           this.resultado = resp.datos;
           this.cargarFechasExistentes();
+          this.servicioNotificacion.exito(resp.mensaje);
         } else {
           this.mensajeError = resp.mensaje;
+          this.servicioNotificacion.error(resp.mensaje);
         }
       },
       error: (err) => {
         this.procesando = false;
         this.mensajeError = err.error?.mensaje || 'Error al conectar con la API.';
+        this.servicioNotificacion.error(this.mensajeError);
       }
     });
   }

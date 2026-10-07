@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ComercioServicio } from '../../servicios/comercio.servicio';
+import { NotificacionServicio } from '../../servicios/notificacion.servicio';
 import { ComercioCuarentena } from '../../modelos/comercio.modelo';
 
 @Component({
@@ -13,6 +14,7 @@ import { ComercioCuarentena } from '../../modelos/comercio.modelo';
 })
 export class ComerciosCuarentenaComponent implements OnInit {
   private servicioComercio = inject(ComercioServicio);
+  private servicioNotificacion = inject(NotificacionServicio);
 
   listaCuarentena: ComercioCuarentena[] = [];
   terminoBusqueda = '';
@@ -35,11 +37,13 @@ export class ComerciosCuarentenaComponent implements OnInit {
           this.listaCuarentena = resp.datos || [];
         } else {
           this.mensajeError = resp.mensaje;
+          this.servicioNotificacion.error(resp.mensaje);
         }
       },
       error: (err) => {
         this.cargando = false;
         this.mensajeError = err.error?.mensaje || 'Error al consultar registros de cuarentena.';
+        this.servicioNotificacion.error(this.mensajeError);
       }
     });
   }

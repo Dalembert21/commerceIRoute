@@ -41,8 +41,20 @@
   </div>
 
   @if (mensajeError) {
-    <div class="alerta alerta-peligro">
-      <p>{{ mensajeError }}</p>
+    <div class="alerta alerta-peligro" role="alert">
+      <div class="alerta-icono">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="alerta-cuerpo">
+        <p class="alerta-mensaje">{{ mensajeError }}</p>
+      </div>
+      <button type="button" class="alerta-cerrar" (click)="mensajeError = null" aria-label="Cerrar mensaje de error">
+        &times;
+      </button>
     </div>
   }
 

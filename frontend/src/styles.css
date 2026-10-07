@@ -256,28 +256,116 @@ button, input, select, textarea {
 }
 
 .alerta {
-  padding: 0.85rem 1.15rem;
-  border-radius: var(--radio-sm);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radio-md);
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
+  line-height: 1.45;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.alerta-exito {
-  background-color: #e8f5e9;
-  border-left: 5px solid var(--color-exito);
-  border-top: 1px solid #c8e6c9;
-  border-right: 1px solid #c8e6c9;
-  border-bottom: 1px solid #c8e6c9;
-  color: var(--color-exito-texto);
+.alerta-icono {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.1rem;
+}
+
+.alerta-icono svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.alerta-cuerpo {
+  flex: 1;
+  min-width: 0;
+}
+
+.alerta-cuerpo p,
+.alerta-mensaje {
+  margin: 0;
+  word-break: break-word;
+}
+
+.alerta-titulo {
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.alerta-cerrar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: auto;
+  font-size: 1.25rem;
+  line-height: 1;
+  opacity: 0.6;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--radio-sm);
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.alerta-cerrar:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .alerta-peligro {
-  background-color: #fdf2f2;
-  border-left: 5px solid var(--color-peligro);
-  border-top: 1px solid #fecaca;
-  border-right: 1px solid #fecaca;
-  border-bottom: 1px solid #fecaca;
-  color: var(--color-peligro-texto);
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.alerta-peligro .alerta-icono {
+  color: #dc2626;
+}
+
+.alerta-exito {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.alerta-exito .alerta-icono {
+  color: #16a34a;
+}
+
+.alerta-alerta,
+.alerta-advertencia {
+  background-color: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.alerta-advertencia .alerta-icono {
+  color: #d97706;
+}
+
+.alerta-info {
+  background-color: #f0f9ff;
+  border: 1px solid #bae6fd;
+  color: #075985;
+}
+
+.alerta-info .alerta-icono {
+  color: #0284c7;
+}
+
+.acciones-alerta {
+  margin-top: 0.75rem;
 }
 
 .spinner {

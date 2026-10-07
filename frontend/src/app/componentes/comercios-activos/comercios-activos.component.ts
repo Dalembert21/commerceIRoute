@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ComercioServicio } from '../../servicios/comercio.servicio';
+import { NotificacionServicio } from '../../servicios/notificacion.servicio';
 import { Comercio } from '../../modelos/comercio.modelo';
 
 @Component({
@@ -13,6 +14,7 @@ import { Comercio } from '../../modelos/comercio.modelo';
 })
 export class ComerciosActivosComponent implements OnInit {
   private servicioComercio = inject(ComercioServicio);
+  private servicioNotificacion = inject(NotificacionServicio);
 
   listaComercios: Comercio[] = [];
   terminoBusqueda = '';
@@ -34,6 +36,7 @@ export class ComerciosActivosComponent implements OnInit {
       },
       error: () => {
         this.cargando = false;
+        this.servicioNotificacion.error('Error al conectar con la API de comercios.');
       }
     });
   }

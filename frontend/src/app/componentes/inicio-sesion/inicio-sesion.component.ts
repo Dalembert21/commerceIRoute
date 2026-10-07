@@ -24,18 +24,13 @@ export class InicioSesionComponent {
     this.mostrarClave = !this.mostrarClave;
   }
 
-  rellenarCredenciales(usr: string, pass: string): void {
-    this.usuario = usr;
-    this.clave = pass;
-  }
-
   iniciarSesion(): void {
     this.errorMensaje = null;
     const ok = this.auth.iniciarSesion(this.usuario, this.clave);
     if (ok) {
       this.router.navigate(['/cargar-archivo']);
     } else {
-      this.errorMensaje = 'Usuario o clave incorrecta (use admin / 123456).';
+      this.errorMensaje = 'Por favor ingrese usuario y contraseña para continuar.';
     }
   }
 }
