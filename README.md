@@ -1,6 +1,4 @@
-# Solución Técnica: Módulo de Gestión y Depuración de Comercios (iRoute)
 
-Aplicación Web Full Stack desarrollada con **.NET (API REST)**, **Angular 19 (Frontend)** y **SQL Server (Base de Datos)** para la carga, previsualización, validación y depuración transaccional de comercios a partir de archivos CSV.
 
 ---
 
