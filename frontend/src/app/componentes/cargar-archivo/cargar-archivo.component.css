@@ -41,18 +41,42 @@
 .info-archivo {
   margin-top: 1rem;
   background: white;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 0.85rem;
   border-radius: var(--radio-sm);
   border: 1px solid var(--color-borde);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 .detalles-archivo {
   display: flex;
   flex-direction: column;
   font-size: 0.85rem;
+  text-align: left;
 }
 .peso-archivo {
   font-size: 0.72rem;
   color: var(--color-texto-terciario);
+}
+.boton-quitar-archivo {
+  background: transparent;
+  border: 1px solid var(--color-peligro);
+  color: var(--color-peligro);
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radio-sm);
+  font-size: 0.775rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.boton-quitar-archivo:hover {
+  background-color: var(--color-peligro);
+  color: #ffffff;
+}
+.boton-espaciado-top {
+  margin-top: 0.5rem;
 }
 .panel-resumen {
   display: flex;
@@ -107,9 +131,6 @@
 .texto-observado {
   color: var(--color-peligro);
   font-weight: 700;
-  background-color: var(--color-peligro-claro);
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
 }
 @media (max-width: 900px) {
   .cuadricula-carga {

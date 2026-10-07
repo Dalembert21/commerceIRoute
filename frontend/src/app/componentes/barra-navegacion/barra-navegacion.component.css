@@ -79,7 +79,7 @@
   transition: all 0.2s ease;
 }
 .boton-cerrar:hover {
-  background-color: var(--color-peligro-claro);
-  color: var(--color-peligro-texto);
-  border-color: #fca5a5;
+  background-color: var(--color-peligro);
+  color: #ffffff;
+  border-color: var(--color-peligro);
 }

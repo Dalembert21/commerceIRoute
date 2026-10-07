@@ -9,21 +9,29 @@
   --color-acento-hover: #d44315;
   --color-acento-claro: #fdf2ee;
 
-  /* Verde Principal: Éxito y registros válidos */
-  --color-exito: #009B56;
-  --color-exito-hover: #008248;
-  --color-exito-claro: #e6f5ee;
-  --color-exito-texto: #006b3b;
+  /* Verde Sólido: Éxito y registros válidos */
+  --color-exito: #198754;
+  --color-exito-hover: #157347;
+  --color-exito-claro: #d1e7dd;
+  --color-exito-texto: #0f5132;
 
-  /* Rojo / Peligro: Cuarentena y Errores */
-  --color-peligro: #d93025;
-  --color-peligro-claro: #fce8e6;
-  --color-peligro-texto: #c5221f;
+  /* Rojo Sólido Angular: Cuarentena y Errores */
+  --color-peligro: #dd0031;
+  --color-peligro-hover: #c3002f;
+  --color-peligro-claro: #f8d7da;
+  --color-peligro-texto: #842029;
 
-  /* Naranja Advertencia */
-  --color-alerta: #e65100;
-  --color-alerta-claro: #fff3e0;
-  --color-alerta-texto: #bf360c;
+  /* Ámbar / Naranja Sólido: Advertencia y Pendiente */
+  --color-alerta: #f57c00;
+  --color-alerta-hover: #e65100;
+  --color-alerta-claro: #fff3cd;
+  --color-alerta-texto: #664d03;
+
+  /* Azul Sólido: Información */
+  --color-info: #0288d1;
+  --color-info-hover: #0277bd;
+  --color-info-claro: #cff4fc;
+  --color-info-texto: #055160;
 
   /* Blanco y Fondos */
   --color-fondo: #f8f9fa;
@@ -220,47 +228,55 @@ button, input, select, textarea {
 .insignia {
   display: inline-block;
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 0.2rem 0.5rem;
+  font-weight: 700;
+  padding: 0.25rem 0.55rem;
   border-radius: var(--radio-sm);
+  color: #ffffff;
+  letter-spacing: 0.3px;
 }
 
 .insignia-exito {
-  background-color: var(--color-exito-claro);
-  color: var(--color-exito-texto);
+  background-color: var(--color-exito);
+  color: #ffffff;
 }
 
 .insignia-peligro {
-  background-color: var(--color-peligro-claro);
-  color: var(--color-peligro-texto);
+  background-color: var(--color-peligro);
+  color: #ffffff;
 }
 
 .insignia-alerta {
-  background-color: var(--color-alerta-claro);
-  color: var(--color-alerta-texto);
+  background-color: var(--color-alerta);
+  color: #ffffff;
 }
 
 .insignia-info {
-  background-color: var(--color-acento-claro);
-  color: var(--color-acento-hover);
+  background-color: var(--color-info);
+  color: #ffffff;
 }
 
 .alerta {
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 1.15rem;
   border-radius: var(--radio-sm);
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
 }
 
 .alerta-exito {
-  background-color: var(--color-exito-claro);
-  border: 1px solid #c8e6c9;
+  background-color: #e8f5e9;
+  border-left: 5px solid var(--color-exito);
+  border-top: 1px solid #c8e6c9;
+  border-right: 1px solid #c8e6c9;
+  border-bottom: 1px solid #c8e6c9;
   color: var(--color-exito-texto);
 }
 
 .alerta-peligro {
-  background-color: var(--color-peligro-claro);
-  border: 1px solid #ffcdd2;
+  background-color: #fdf2f2;
+  border-left: 5px solid var(--color-peligro);
+  border-top: 1px solid #fecaca;
+  border-right: 1px solid #fecaca;
+  border-bottom: 1px solid #fecaca;
   color: var(--color-peligro-texto);
 }
 

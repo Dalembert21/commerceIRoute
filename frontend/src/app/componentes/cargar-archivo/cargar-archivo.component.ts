@@ -56,6 +56,16 @@ export class CargarArchivoComponent {
     }
   }
 
+  quitarArchivo(inputElement?: HTMLInputElement): void {
+    this.archivoSeleccionado = null;
+    this.filasPrevisualizacion = [];
+    this.mensajeExito = null;
+    this.mensajeError = null;
+    if (inputElement) {
+      inputElement.value = '';
+    }
+  }
+
   procesarArchivo(archivo: File): void {
     this.mensajeExito = null;
     this.mensajeError = null;

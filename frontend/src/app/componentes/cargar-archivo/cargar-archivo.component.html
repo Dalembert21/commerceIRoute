@@ -42,7 +42,7 @@
       </p>
 
       <label class="boton boton-acento boton-subir">
-        <input type="file" accept=".csv" (change)="alSeleccionarArchivo($event)" hidden />
+        <input #inputCsv type="file" accept=".csv" (change)="alSeleccionarArchivo($event)" hidden />
         Seleccionar archivo
       </label>
 
@@ -52,6 +52,9 @@
             <span class="nombre-archivo">{{ archivoSeleccionado.name }}</span>
             <span class="peso-archivo">{{ obtenerTamanoFormateado(archivoSeleccionado.size) }}</span>
           </div>
+          <button type="button" class="boton-quitar-archivo" (click)="quitarArchivo(inputCsv)" title="Quitar archivo">
+            &times; Quitar archivo
+          </button>
         </div>
       }
     </div>
@@ -82,6 +85,14 @@
             Registrar en Tabla Commerce
           }
         </button>
+
+        @if (archivoSeleccionado) {
+          <button type="button" class="boton boton-contorno ancho-completo boton-espaciado-top"
+                  [disabled]="cargando"
+                  (click)="quitarArchivo(inputCsv)">
+            Quitar / Cambiar Archivo
+          </button>
+        }
       </div>
     </div>
   </div>
@@ -98,12 +109,12 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>pc_processdate</th>
-              <th>pc_codcom</th>
-              <th>pc_nomcomred</th>
-              <th>pc_numdoc</th>
-              <th>pc_tipdoc</th>
-              <th>pc_estado</th>
+              <th>Fecha Proceso</th>
+              <th>Código Comercio</th>
+              <th>Nombre Comercial</th>
+              <th>Número Documento</th>
+              <th>Tipo Documento</th>
+              <th>Estado</th>
             </tr>
           </thead>
           <tbody>

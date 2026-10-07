@@ -50,17 +50,13 @@
 .texto-vacio {
   color: var(--color-peligro);
   font-weight: 700;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 .insignia-motivo {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radio-sm);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  background: var(--color-peligro-claro);
-  color: var(--color-peligro-texto);
-  border: 1px solid #fca5a5;
+  color: var(--color-peligro);
 }
 @media (max-width: 900px) {
   .fila-metricas {
