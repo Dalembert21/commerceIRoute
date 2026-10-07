@@ -29,7 +29,6 @@ export class CargarArchivoComponent {
   mensajeExito: string | null = null;
   mensajeError: string | null = null;
 
-  // Formato exigido en el enunciado: commerce_DDMMYYYY.csv
   private readonly patronNombreArchivo = /^commerce_\d{8}\.csv$/i;
 
   alArrastrarSobre(event: DragEvent): void {

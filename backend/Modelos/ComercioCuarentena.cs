@@ -1,8 +1,5 @@
 namespace IRouteComercioApi.Modelos;
 
-/// <summary>
-/// Modelo representativo de la tabla 'commerce_quarantine', con columna motivo de rechazo.
-/// </summary>
 public class ComercioCuarentena
 {
     public int Id { get; set; }

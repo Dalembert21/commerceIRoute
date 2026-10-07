@@ -10,7 +10,6 @@ public class ComercioServicio : IComercioServicio
     private readonly IComercioRepositorio _repositorio;
     private const long TamanoMaximoBytes = 5 * 1024 * 1024; // 5 MB
 
-    // Patrón solicitado por el enunciado: commerce_DDMMYYYY.csv (ej: commerce_07102026.csv)
     private static readonly Regex PatronNombreArchivo = new(@"^commerce_\d{8}\.csv$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     public ComercioServicio(IComercioRepositorio repositorio)
@@ -30,10 +29,10 @@ public class ComercioServicio : IComercioServicio
             throw new ArgumentException("El archivo excede el tamaño máximo permitido de 5 MB.");
         }
 
-        // Validación estricta del nombre solicitado en el enunciado: commerce_DDMMYYYY.csv
+        // Validación del formato de archivo
         if (!PatronNombreArchivo.IsMatch(archivo.FileName))
         {
-            throw new ArgumentException("El nombre del archivo debe cumplir con el formato requerido: commerce_DDMMYYYY.csv (por ejemplo: commerce_07102026.csv).");
+            throw new ArgumentException("El nombre del archivo debe tener el formato commerce_DDMMYYYY.csv (por ejemplo: commerce_07102026.csv).");
         }
 
         var comercios = new List<Comercio>();
@@ -51,7 +50,7 @@ public class ComercioServicio : IComercioServicio
                 .Select(c => c.Trim().ToLowerInvariant().Trim('\"', '\''))
                 .ToList();
 
-            // Mapeo tolerante priorizando nombres oficiales del contrato pc_*
+            // Mapeo de columnas
             int idxFecha = cabeceras.FindIndex(c => c.Contains("processdate") || c.Contains("fecha"));
             int idxCodigo = cabeceras.FindIndex(c => c.Contains("codcom") || c.Contains("codigo"));
             int idxNombre = cabeceras.FindIndex(c => c.Contains("nomcomred") || c.Contains("nombre"));

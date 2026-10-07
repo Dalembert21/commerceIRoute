@@ -24,7 +24,7 @@ IF OBJECT_ID('dbo.sp_obtener_comercios', 'P') IS NOT NULL
     DROP PROCEDURE dbo.sp_obtener_comercios;
 GO
 
--- 1. Tabla principal de comercios (estructura idéntica a las columnas del archivo CSV)
+-- Tabla principal de comercios
 IF OBJECT_ID('dbo.commerce', 'U') IS NOT NULL
     DROP TABLE dbo.commerce;
 GO
@@ -41,7 +41,7 @@ CREATE TABLE dbo.commerce (
 );
 GO
 
--- 2. Tabla para almacenar los registros en cuarentena
+-- Tabla para almacenar los registros en cuarentena
 IF OBJECT_ID('dbo.commerce_quarantine', 'U') IS NOT NULL
     DROP TABLE dbo.commerce_quarantine;
 GO
@@ -59,7 +59,7 @@ CREATE TABLE dbo.commerce_quarantine (
 );
 GO
 
--- Requerimiento del enunciado: Modificar la tabla commerce_quarantine agregando la columna 'motivo'
+-- Columna motivo en la tabla de cuarentena
 IF NOT EXISTS (
     SELECT 1 FROM sys.columns 
     WHERE Name = N'motivo' AND Object_ID = OBJECT_ID(N'dbo.commerce_quarantine')
@@ -70,7 +70,7 @@ BEGIN
 END
 GO
 
--- 3. Procedimiento para registrar un comercio individual (sp_create_commerce)
+-- Procedimiento para registrar un comercio
 CREATE PROCEDURE dbo.sp_create_commerce
     @pc_processdate VARCHAR(20),
     @pc_codcom VARCHAR(20) = NULL,
@@ -105,14 +105,13 @@ BEGIN
 END;
 GO
 
--- 4. Procedimiento para procesar comercios por fecha y mover observados a cuarentena
+-- Procedimiento para procesar comercios por fecha y mover observados a cuarentena
 CREATE PROCEDURE dbo.sp_procesar_comercios_por_fecha
     @pc_processdate VARCHAR(20)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- Tabla temporal para almacenar los registros que no cumplen las condiciones
     CREATE TABLE #registros_con_error (
         id INT,
         pc_processdate VARCHAR(20),
@@ -124,9 +123,6 @@ BEGIN
         motivo VARCHAR(250)
     );
 
-    -- Detección de inconsistencias según las reglas del enunciado:
-    -- 1. pc_nomcomred no debe estar vacío
-    -- 2. pc_numdoc no debe estar vacío, ni contener letras ni caracteres especiales
     INSERT INTO #registros_con_error (
         id,
         pc_processdate,
@@ -232,7 +228,7 @@ BEGIN
 END;
 GO
 
--- 5. Procedimiento para listar los comercios en cuarentena
+-- Procedimiento para listar comercios en cuarentena
 CREATE PROCEDURE dbo.sp_obtener_comercios_cuarentena
 AS
 BEGIN
@@ -254,7 +250,7 @@ BEGIN
 END;
 GO
 
--- 6. Procedimiento para listar los comercios vigentes
+-- Procedimiento para listar comercios vigentes
 CREATE PROCEDURE dbo.sp_obtener_comercios
     @pc_processdate VARCHAR(20) = NULL
 AS

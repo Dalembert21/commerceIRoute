@@ -15,9 +15,14 @@ export class InicioSesionComponent {
   private auth = inject(AutenticacionServicio);
   private router = inject(Router);
 
-  usuario = 'admin';
-  clave = '123456';
+  usuario = '';
+  clave = '';
+  mostrarClave = false;
   errorMensaje: string | null = null;
+
+  alternarMostrarClave(): void {
+    this.mostrarClave = !this.mostrarClave;
+  }
 
   rellenarCredenciales(usr: string, pass: string): void {
     this.usuario = usr;

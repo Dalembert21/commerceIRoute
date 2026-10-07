@@ -1,8 +1,5 @@
 namespace IRouteComercioApi.Modelos;
 
-/// <summary>
-/// Modelo representativo de la tabla 'commerce', alineado al esquema oficial del CSV (pc_*).
-/// </summary>
 public class Comercio
 {
     public int Id { get; set; }

@@ -69,3 +69,41 @@
   background: var(--color-primario-claro);
   color: var(--color-primario);
 }
+
+.contenedor-clave {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.entrada-clave {
+  width: 100%;
+  padding-right: 2.75rem !important;
+}
+
+.boton-ver-clave {
+  position: absolute;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-texto-secundario);
+  padding: 0.25rem;
+  border-radius: var(--radio-sm);
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.boton-ver-clave:hover {
+  color: var(--color-primario);
+  background-color: var(--color-primario-claro);
+}
+
+.boton-ver-clave:focus-visible {
+  outline: 2px solid var(--color-primario);
+  outline-offset: 2px;
+}
+

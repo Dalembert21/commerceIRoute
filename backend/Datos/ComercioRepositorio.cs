@@ -40,12 +40,7 @@ public class ComercioRepositorio : IComercioRepositorio
         return Convert.ToInt32(resultado);
     }
 
-    /// <summary>
-    /// Registra la colección de comercios invocando sp_create_commerce por fila.
-    /// NOTA DE ARQUITECTURA: Se envuelve en una SqlTransaction para asegurar atomicidad
-    /// cumpliendo con el requisito explícito del enunciado ("mediante la invocación de un store procedure sp_create_commerce").
-    /// Para volúmenes masivos de producción (+100k registros), la alternativa recomendada es Table-Valued Parameters (TVP) o SqlBulkCopy.
-    /// </summary>
+    // Inserta la lista de comercios dentro de una transacción para evitar inconsistencias
     public async Task<int> CrearComerciosLoteAsync(IEnumerable<Comercio> comercios)
     {
         await using var conexion = new SqlConnection(_cadenaConexion);
