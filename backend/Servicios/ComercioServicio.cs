@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using IRouteComercioApi.Datos;
 using IRouteComercioApi.Modelos;
 
@@ -7,7 +8,10 @@ namespace IRouteComercioApi.Servicios;
 public class ComercioServicio : IComercioServicio
 {
     private readonly IComercioRepositorio _repositorio;
-    private const long TamanoMaximoBytes = 5 * 1024 * 1024;
+    private const long TamanoMaximoBytes = 5 * 1024 * 1024; // 5 MB
+
+    // Patrón solicitado por el enunciado: commerce_DDMMYYYY.csv (ej: commerce_07102026.csv)
+    private static readonly Regex PatronNombreArchivo = new(@"^commerce_\d{8}\.csv$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     public ComercioServicio(IComercioRepositorio repositorio)
     {
@@ -26,9 +30,10 @@ public class ComercioServicio : IComercioServicio
             throw new ArgumentException("El archivo excede el tamaño máximo permitido de 5 MB.");
         }
 
-        if (!archivo.FileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        // Validación estricta del nombre solicitado en el enunciado: commerce_DDMMYYYY.csv
+        if (!PatronNombreArchivo.IsMatch(archivo.FileName))
         {
-            throw new ArgumentException("El archivo debe tener extensión .csv.");
+            throw new ArgumentException("El nombre del archivo debe cumplir con el formato requerido: commerce_DDMMYYYY.csv (por ejemplo: commerce_07102026.csv).");
         }
 
         var comercios = new List<Comercio>();
@@ -46,13 +51,15 @@ public class ComercioServicio : IComercioServicio
                 .Select(c => c.Trim().ToLowerInvariant().Trim('\"', '\''))
                 .ToList();
 
-            int idxFecha = cabeceras.FindIndex(c => c.Contains("fecha") || c.Contains("processdate"));
-            int idxCodigo = cabeceras.FindIndex(c => c.Contains("codigo") || c.Contains("codcom"));
-            int idxNombre = cabeceras.FindIndex(c => c.Contains("nombre") || c.Contains("nomcomred"));
-            int idxDocumento = cabeceras.FindIndex(c => c.Contains("documento") || c.Contains("numdoc"));
-            int idxTipo = cabeceras.FindIndex(c => c.Contains("tipo") || c.Contains("tipdoc"));
+            // Mapeo tolerante priorizando nombres oficiales del contrato pc_*
+            int idxFecha = cabeceras.FindIndex(c => c.Contains("processdate") || c.Contains("fecha"));
+            int idxCodigo = cabeceras.FindIndex(c => c.Contains("codcom") || c.Contains("codigo"));
+            int idxNombre = cabeceras.FindIndex(c => c.Contains("nomcomred") || c.Contains("nombre"));
+            int idxDocumento = cabeceras.FindIndex(c => c.Contains("numdoc") || c.Contains("documento"));
+            int idxTipo = cabeceras.FindIndex(c => c.Contains("tipdoc") || c.Contains("tipo"));
             int idxEstado = cabeceras.FindIndex(c => c.Contains("estado"));
 
+            // Posiciones por defecto en caso de encabezados sin coincidencias directas
             if (idxFecha == -1) idxFecha = 0;
             if (idxCodigo == -1 && cabeceras.Count > 1) idxCodigo = 1;
             if (idxNombre == -1 && cabeceras.Count > 2) idxNombre = 2;
@@ -83,12 +90,12 @@ public class ComercioServicio : IComercioServicio
 
                 comercios.Add(new Comercio
                 {
-                    FechaProceso = fecha,
-                    CodigoComercio = codigo,
-                    NombreComercial = nombre,
-                    NumeroDocumento = documento,
-                    TipoDocumento = tipo,
-                    Estado = estado,
+                    PcProcessdate = fecha,
+                    PcCodcom = codigo,
+                    PcNomcomred = nombre,
+                    PcNumdoc = documento,
+                    PcTipdoc = tipo,
+                    PcEstado = estado,
                     FechaRegistro = DateTime.Now
                 });
             }

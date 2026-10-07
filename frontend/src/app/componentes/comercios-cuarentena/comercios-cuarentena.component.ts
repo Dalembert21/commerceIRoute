@@ -44,16 +44,16 @@ export class ComerciosCuarentenaComponent implements OnInit {
     });
   }
 
-  // Filtro en memoria en español
+  // Filtro en memoria
   get registrosFiltrados(): ComercioCuarentena[] {
     if (!this.terminoBusqueda.trim()) return this.listaCuarentena;
     const q = this.terminoBusqueda.toLowerCase().trim();
     return this.listaCuarentena.filter(item =>
       (item.motivo && item.motivo.toLowerCase().includes(q)) ||
-      (item.nombreComercial && item.nombreComercial.toLowerCase().includes(q)) ||
-      (item.numeroDocumento && item.numeroDocumento.toLowerCase().includes(q)) ||
-      (item.codigoComercio && item.codigoComercio.toLowerCase().includes(q)) ||
-      (item.fechaProceso && item.fechaProceso.toLowerCase().includes(q))
+      (item.pcNomcomred && item.pcNomcomred.toLowerCase().includes(q)) ||
+      (item.pcNumdoc && item.pcNumdoc.toLowerCase().includes(q)) ||
+      (item.pcCodcom && item.pcCodcom.toLowerCase().includes(q)) ||
+      (item.pcProcessdate && item.pcProcessdate.toLowerCase().includes(q))
     );
   }
 
@@ -61,7 +61,9 @@ export class ComerciosCuarentenaComponent implements OnInit {
   contarPorMotivo(tipo: 'nombre' | 'documento'): number {
     return this.listaCuarentena.filter(item => {
       const m = item.motivo?.toLowerCase() || '';
-      return tipo === 'nombre' ? (m.includes('nombre') || m.includes('nomcomred')) : (m.includes('número') || m.includes('numdoc') || m.includes('letras'));
+      return tipo === 'nombre' 
+        ? (m.includes('nombre') || m.includes('nomcomred')) 
+        : (m.includes('número') || m.includes('numdoc') || m.includes('letras') || m.includes('caracteres'));
     }).length;
   }
 }

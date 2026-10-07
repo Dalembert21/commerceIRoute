@@ -3,20 +3,22 @@
     <div>
       <h1 class="titulo-seccion">Comercios Válidos (Tabla Commerce)</h1>
       <p class="subtitulo-seccion">
-        Registros que no tuvieron errores y permanecen en la tabla <code>commerce</code>.
+        Muestra los registros vigentes en la tabla <code>commerce</code> que cumplen con las validaciones de negocio.
       </p>
     </div>
 
-    <button class="boton boton-contorno" (click)="cargarComercios()" [disabled]="cargando">
-      Refrescar
-    </button>
+    <div>
+      <button class="boton boton-contorno" (click)="cargarComercios()" [disabled]="cargando">
+        Refrescar
+      </button>
+    </div>
   </div>
 
   <div class="barra-filtros tarjeta">
     <input
       type="text"
       class="entrada-busqueda"
-      placeholder="Buscar por código, nombre, documento o fecha..."
+      placeholder="Buscar por pc_nomcomred, pc_numdoc, pc_codcom o pc_processdate..."
       [(ngModel)]="terminoBusqueda"
     />
   </div>
@@ -26,41 +28,41 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Fecha Proceso</th>
-          <th>Código Comercio</th>
-          <th>Nombre Comercial</th>
-          <th>Número Documento</th>
-          <th>Tipo Documento</th>
-          <th>Estado</th>
-          <th>Fecha Registro</th>
+          <th>pc_processdate</th>
+          <th>pc_codcom</th>
+          <th>pc_nomcomred</th>
+          <th>pc_numdoc</th>
+          <th>pc_tipdoc</th>
+          <th>pc_estado</th>
         </tr>
       </thead>
       <tbody>
         @if (cargando) {
           <tr>
-            <td colspan="8" class="celda-centrada">
-              <span class="spinner"></span> Consultando comercios...
+            <td colspan="7" class="celda-centrada">
+              <span class="spinner"></span> Cargando comercios...
             </td>
           </tr>
         } @else if (comerciosFiltrados.length === 0) {
           <tr>
-            <td colspan="8" class="celda-centrada">
-              <p>No hay comercios para mostrar.</p>
+            <td colspan="7" class="celda-centrada">
+              <p>No se encontraron comercios registrados.</p>
             </td>
           </tr>
         } @else {
-          @for (c of comerciosFiltrados; track c.id) {
+          @for (item of comerciosFiltrados; track item.id) {
             <tr>
-              <td>#{{ c.id }}</td>
-              <td>{{ c.fechaProceso }}</td>
-              <td><code>{{ c.codigoComercio || '-' }}</code></td>
-              <td><strong>{{ c.nombreComercial }}</strong></td>
-              <td><code>{{ c.numeroDocumento }}</code></td>
-              <td>{{ c.tipoDocumento || '-' }}</td>
+              <td>#{{ item.id }}</td>
+              <td>{{ item.pcProcessdate }}</td>
+              <td><code>{{ item.pcCodcom || '-' }}</code></td>
+              <td>{{ item.pcNomcomred || '-' }}</td>
+              <td><code>{{ item.pcNumdoc || '-' }}</code></td>
+              <td>{{ item.pcTipdoc || '-' }}</td>
               <td>
-                <span class="insignia insignia-exito">{{ c.estado || 'ACTIVO' }}</span>
+                <span class="insignia" [ngClass]="item.pcEstado === 'ACTIVO' ? 'insignia-exito' : 'insignia-alerta'">
+                  {{ item.pcEstado || 'PENDIENTE' }}
+                </span>
               </td>
-              <td>{{ c.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}</td>
             </tr>
           }
         }

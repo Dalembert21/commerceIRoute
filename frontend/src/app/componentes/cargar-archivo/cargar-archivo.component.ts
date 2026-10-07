@@ -4,12 +4,12 @@ import { RouterLink } from '@angular/router';
 import { ComercioServicio } from '../../servicios/comercio.servicio';
 
 interface FilaPrevisualizacion {
-  fechaProceso: string;
-  codigoComercio: string;
-  nombreComercial: string;
-  numeroDocumento: string;
-  tipoDocumento: string;
-  estado: string;
+  pcProcessdate: string;
+  pcCodcom: string;
+  pcNomcomred: string;
+  pcNumdoc: string;
+  pcTipdoc: string;
+  pcEstado: string;
 }
 
 @Component({
@@ -28,6 +28,9 @@ export class CargarArchivoComponent {
   cargando = false;
   mensajeExito: string | null = null;
   mensajeError: string | null = null;
+
+  // Formato exigido en el enunciado: commerce_DDMMYYYY.csv
+  private readonly patronNombreArchivo = /^commerce_\d{8}\.csv$/i;
 
   alArrastrarSobre(event: DragEvent): void {
     event.preventDefault();
@@ -59,7 +62,12 @@ export class CargarArchivoComponent {
     this.mensajeError = null;
 
     if (!archivo.name.endsWith('.csv')) {
-      this.mensajeError = 'Debe seleccionar un archivo .csv (por ejemplo commerce_07102026.csv).';
+      this.mensajeError = 'Debe seleccionar un archivo con extensión .csv.';
+      return;
+    }
+
+    if (!this.patronNombreArchivo.test(archivo.name)) {
+      this.mensajeError = `El nombre del archivo debe cumplir con el formato requerido: commerce_DDMMYYYY.csv (ejemplo: commerce_07102026.csv). Archivo actual: "${archivo.name}".`;
       return;
     }
 
@@ -93,17 +101,33 @@ export class CargarArchivoComponent {
     if (lineas.length === 0) return;
 
     const separador = lineas[0].includes(';') ? ';' : ',';
+    const cabeceras = lineas[0].split(separador).map(c => c.trim().toLowerCase().replace(/^["']|["']$/g, ''));
+
+    let idxFecha = cabeceras.findIndex(c => c.includes('processdate') || c.includes('fecha'));
+    let idxCod = cabeceras.findIndex(c => c.includes('codcom') || c.includes('codigo'));
+    let idxNom = cabeceras.findIndex(c => c.includes('nomcomred') || c.includes('nombre'));
+    let idxDoc = cabeceras.findIndex(c => c.includes('numdoc') || c.includes('documento'));
+    let idxTip = cabeceras.findIndex(c => c.includes('tipdoc') || c.includes('tipo'));
+    let idxEst = cabeceras.findIndex(c => c.includes('estado'));
+
+    if (idxFecha === -1) idxFecha = 0;
+    if (idxCod === -1 && cabeceras.length > 1) idxCod = 1;
+    if (idxNom === -1 && cabeceras.length > 2) idxNom = 2;
+    if (idxDoc === -1 && cabeceras.length > 3) idxDoc = 3;
+    if (idxTip === -1 && cabeceras.length > 4) idxTip = 4;
+    if (idxEst === -1 && cabeceras.length > 5) idxEst = 5;
+
     const filas: FilaPrevisualizacion[] = [];
 
     for (let i = 1; i < lineas.length; i++) {
       const partes = lineas[i].split(separador).map(p => p.trim().replace(/^["']|["']$/g, ''));
       filas.push({
-        fechaProceso: partes[0] || '',
-        codigoComercio: partes[1] || '',
-        nombreComercial: partes[2] || '',
-        numeroDocumento: partes[3] || '',
-        tipoDocumento: partes[4] || '',
-        estado: partes[5] || ''
+        pcProcessdate: partes[idxFecha] || '',
+        pcCodcom: partes[idxCod] || '',
+        pcNomcomred: partes[idxNom] || '',
+        pcNumdoc: partes[idxDoc] || '',
+        pcTipdoc: partes[idxTip] || '',
+        pcEstado: partes[idxEst] || ''
       });
     }
 

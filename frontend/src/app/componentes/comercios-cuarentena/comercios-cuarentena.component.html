@@ -35,7 +35,7 @@
     <input
       type="text"
       class="entrada-busqueda"
-      placeholder="Filtrar por motivo, documento, nombre o código..."
+      placeholder="Filtrar por motivo, pc_numdoc, pc_nomcomred o código..."
       [(ngModel)]="terminoBusqueda"
     />
   </div>
@@ -51,10 +51,10 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Fecha Proceso</th>
-          <th>Código Comercio</th>
-          <th>Nombre Comercial</th>
-          <th>Número Documento</th>
+          <th>pc_processdate</th>
+          <th>pc_codcom</th>
+          <th>pc_nomcomred</th>
+          <th>pc_numdoc</th>
           <th>Motivo del Rechazo</th>
           <th>Fecha Cuarentena</th>
         </tr>
@@ -76,20 +76,20 @@
           @for (item of registrosFiltrados; track item.id) {
             <tr>
               <td>#{{ item.id }}</td>
-              <td>{{ item.fechaProceso }}</td>
-              <td><code>{{ item.codigoComercio || '-' }}</code></td>
+              <td>{{ item.pcProcessdate }}</td>
+              <td><code>{{ item.pcCodcom || '-' }}</code></td>
               <td>
-                @if (!item.nombreComercial) {
+                @if (!item.pcNomcomred) {
                   <span class="texto-vacio">[VACÍO]</span>
                 } @else {
-                  {{ item.nombreComercial }}
+                  {{ item.pcNomcomred }}
                 }
               </td>
               <td>
-                @if (!item.numeroDocumento) {
+                @if (!item.pcNumdoc) {
                   <span class="texto-vacio">[VACÍO]</span>
                 } @else {
-                  <code>{{ item.numeroDocumento }}</code>
+                  <code>{{ item.pcNumdoc }}</code>
                 }
               </td>
               <td>

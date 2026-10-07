@@ -1,23 +1,23 @@
 export interface Comercio {
   id?: number;
-  fechaProceso: string;
-  codigoComercio?: string;
-  nombreComercial?: string;
-  numeroDocumento?: string;
-  tipoDocumento?: string;
-  estado?: string;
+  pcProcessdate: string;
+  pcCodcom?: string;
+  pcNomcomred?: string;
+  pcNumdoc?: string;
+  pcTipdoc?: string;
+  pcEstado?: string;
   fechaRegistro?: string;
 }
 
 export interface ComercioCuarentena {
   id: number;
   idComercioOrigen?: number;
-  fechaProceso: string;
-  codigoComercio?: string;
-  nombreComercial?: string;
-  numeroDocumento?: string;
-  tipoDocumento?: string;
-  estado?: string;
+  pcProcessdate: string;
+  pcCodcom?: string;
+  pcNomcomred?: string;
+  pcNumdoc?: string;
+  pcTipdoc?: string;
+  pcEstado?: string;
   motivo: string;
   fechaCuarentena: string;
 }

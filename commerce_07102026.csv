@@ -1,4 +1,4 @@
-fecha_proceso,codigo_comercio,nombre_comercial,numero_documento,tipo_documento,estado
+pc_processdate,pc_codcom,pc_nomcomred,pc_numdoc,pc_tipdoc,pc_estado
 07/10/2026,COM001,BODEGA DON PEPE,20512345678,RUC,ACTIVO
 07/10/2026,COM002,FARMACIA SANTA ROSA,10456789012,RUC,ACTIVO
 07/10/2026,COM003,,20601234567,RUC,ACTIVO

@@ -7,6 +7,7 @@ GO
 USE db_commerce;
 GO
 
+-- Limpieza preventiva de procedimientos existentes
 IF OBJECT_ID('dbo.sp_create_commerce', 'P') IS NOT NULL
     DROP PROCEDURE dbo.sp_create_commerce;
 GO
@@ -23,24 +24,24 @@ IF OBJECT_ID('dbo.sp_obtener_comercios', 'P') IS NOT NULL
     DROP PROCEDURE dbo.sp_obtener_comercios;
 GO
 
--- Tabla principal de comercios
+-- 1. Tabla principal de comercios (estructura idéntica a las columnas del archivo CSV)
 IF OBJECT_ID('dbo.commerce', 'U') IS NOT NULL
     DROP TABLE dbo.commerce;
 GO
 
 CREATE TABLE dbo.commerce (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    fecha_proceso VARCHAR(20) NOT NULL,
-    codigo_comercio VARCHAR(20) NULL,
-    nombre_comercial VARCHAR(150) NULL,
-    numero_documento VARCHAR(20) NULL,
-    tipo_documento VARCHAR(10) NULL,
-    estado VARCHAR(20) NULL,
+    pc_processdate VARCHAR(20) NOT NULL,
+    pc_codcom VARCHAR(20) NULL,
+    pc_nomcomred VARCHAR(150) NULL,
+    pc_numdoc VARCHAR(20) NULL,
+    pc_tipdoc VARCHAR(10) NULL,
+    pc_estado VARCHAR(20) NULL,
     fecha_registro DATETIME NOT NULL DEFAULT GETDATE()
 );
 GO
 
--- Tabla para almacenar los registros en cuarentena
+-- 2. Tabla para almacenar los registros en cuarentena
 IF OBJECT_ID('dbo.commerce_quarantine', 'U') IS NOT NULL
     DROP TABLE dbo.commerce_quarantine;
 GO
@@ -48,17 +49,17 @@ GO
 CREATE TABLE dbo.commerce_quarantine (
     id INT IDENTITY(1,1) PRIMARY KEY,
     id_comercio_origen INT NULL,
-    fecha_proceso VARCHAR(20) NOT NULL,
-    codigo_comercio VARCHAR(20) NULL,
-    nombre_comercial VARCHAR(150) NULL,
-    numero_documento VARCHAR(20) NULL,
-    tipo_documento VARCHAR(10) NULL,
-    estado VARCHAR(20) NULL,
+    pc_processdate VARCHAR(20) NOT NULL,
+    pc_codcom VARCHAR(20) NULL,
+    pc_nomcomred VARCHAR(150) NULL,
+    pc_numdoc VARCHAR(20) NULL,
+    pc_tipdoc VARCHAR(10) NULL,
+    pc_estado VARCHAR(20) NULL,
     fecha_cuarentena DATETIME NOT NULL DEFAULT GETDATE()
 );
 GO
 
--- Columna motivo en la tabla de cuarentena
+-- Requerimiento del enunciado: Modificar la tabla commerce_quarantine agregando la columna 'motivo'
 IF NOT EXISTS (
     SELECT 1 FROM sys.columns 
     WHERE Name = N'motivo' AND Object_ID = OBJECT_ID(N'dbo.commerce_quarantine')
@@ -69,34 +70,34 @@ BEGIN
 END
 GO
 
--- Procedimiento para registrar un comercio
+-- 3. Procedimiento para registrar un comercio individual (sp_create_commerce)
 CREATE PROCEDURE dbo.sp_create_commerce
-    @fecha_proceso VARCHAR(20),
-    @codigo_comercio VARCHAR(20) = NULL,
-    @nombre_comercial VARCHAR(150) = NULL,
-    @numero_documento VARCHAR(20) = NULL,
-    @tipo_documento VARCHAR(10) = NULL,
-    @estado VARCHAR(20) = NULL
+    @pc_processdate VARCHAR(20),
+    @pc_codcom VARCHAR(20) = NULL,
+    @pc_nomcomred VARCHAR(150) = NULL,
+    @pc_numdoc VARCHAR(20) = NULL,
+    @pc_tipdoc VARCHAR(10) = NULL,
+    @pc_estado VARCHAR(20) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     INSERT INTO dbo.commerce (
-        fecha_proceso,
-        codigo_comercio,
-        nombre_comercial,
-        numero_documento,
-        tipo_documento,
-        estado,
+        pc_processdate,
+        pc_codcom,
+        pc_nomcomred,
+        pc_numdoc,
+        pc_tipdoc,
+        pc_estado,
         fecha_registro
     )
     VALUES (
-        LTRIM(RTRIM(@fecha_proceso)),
-        NULLIF(LTRIM(RTRIM(@codigo_comercio)), ''),
-        NULLIF(LTRIM(RTRIM(@nombre_comercial)), ''),
-        NULLIF(LTRIM(RTRIM(@numero_documento)), ''),
-        NULLIF(LTRIM(RTRIM(@tipo_documento)), ''),
-        NULLIF(LTRIM(RTRIM(@estado)), ''),
+        LTRIM(RTRIM(@pc_processdate)),
+        NULLIF(LTRIM(RTRIM(@pc_codcom)), ''),
+        NULLIF(LTRIM(RTRIM(@pc_nomcomred)), ''),
+        NULLIF(LTRIM(RTRIM(@pc_numdoc)), ''),
+        NULLIF(LTRIM(RTRIM(@pc_tipdoc)), ''),
+        NULLIF(LTRIM(RTRIM(@pc_estado)), ''),
         GETDATE()
     );
 
@@ -104,101 +105,112 @@ BEGIN
 END;
 GO
 
--- Procedimiento para procesar comercios por fecha y mover observados a cuarentena
+-- 4. Procedimiento para procesar comercios por fecha y mover observados a cuarentena
 CREATE PROCEDURE dbo.sp_procesar_comercios_por_fecha
-    @fecha_proceso VARCHAR(20)
+    @pc_processdate VARCHAR(20)
 AS
 BEGIN
     SET NOCOUNT ON;
 
+    -- Tabla temporal para almacenar los registros que no cumplen las condiciones
     CREATE TABLE #registros_con_error (
         id INT,
-        fecha_proceso VARCHAR(20),
-        codigo_comercio VARCHAR(20),
-        nombre_comercial VARCHAR(150),
-        numero_documento VARCHAR(20),
-        tipo_documento VARCHAR(10),
-        estado VARCHAR(20),
+        pc_processdate VARCHAR(20),
+        pc_codcom VARCHAR(20),
+        pc_nomcomred VARCHAR(150),
+        pc_numdoc VARCHAR(20),
+        pc_tipdoc VARCHAR(10),
+        pc_estado VARCHAR(20),
         motivo VARCHAR(250)
     );
 
+    -- Detección de inconsistencias según las reglas del enunciado:
+    -- 1. pc_nomcomred no debe estar vacío
+    -- 2. pc_numdoc no debe estar vacío, ni contener letras ni caracteres especiales
     INSERT INTO #registros_con_error (
         id,
-        fecha_proceso,
-        codigo_comercio,
-        nombre_comercial,
-        numero_documento,
-        tipo_documento,
-        estado,
+        pc_processdate,
+        pc_codcom,
+        pc_nomcomred,
+        pc_numdoc,
+        pc_tipdoc,
+        pc_estado,
         motivo
     )
     SELECT 
         c.id,
-        c.fecha_proceso,
-        c.codigo_comercio,
-        c.nombre_comercial,
-        c.numero_documento,
-        c.tipo_documento,
-        c.estado,
+        c.pc_processdate,
+        c.pc_codcom,
+        c.pc_nomcomred,
+        c.pc_numdoc,
+        c.pc_tipdoc,
+        c.pc_estado,
         CASE
-            WHEN (c.nombre_comercial IS NULL OR LTRIM(RTRIM(c.nombre_comercial)) = '')
-                 AND (c.numero_documento IS NULL OR LTRIM(RTRIM(c.numero_documento)) = '')
-                THEN 'El nombre del comercio (nomcomred) se encuentra vacío; El número (numdoc) se encuentra vacío'
+            -- Caso 1: Ambos campos vacíos
+            WHEN (c.pc_nomcomred IS NULL OR LTRIM(RTRIM(c.pc_nomcomred)) = '')
+                 AND (c.pc_numdoc IS NULL OR LTRIM(RTRIM(c.pc_numdoc)) = '')
+                THEN 'El nombre del comercio (nomcomred) se encuentra vacio; El número (numdoc) se encuentra vacio'
 
-            WHEN (c.nombre_comercial IS NULL OR LTRIM(RTRIM(c.nombre_comercial)) = '')
-                 AND (c.numero_documento LIKE '%[^0-9]%')
-                THEN 'El nombre del comercio (nomcomred) se encuentra vacío; El número (numdoc) contiene letras'
+            -- Caso 2: Nombre vacío y documento con letras o caracteres especiales
+            WHEN (c.pc_nomcomred IS NULL OR LTRIM(RTRIM(c.pc_nomcomred)) = '')
+                 AND (c.pc_numdoc LIKE '%[^0-9]%')
+                THEN 'El nombre del comercio (nomcomred) se encuentra vacio; El número (numdoc) contiene letras o caracteres especiales'
 
-            WHEN (c.nombre_comercial IS NULL OR LTRIM(RTRIM(c.nombre_comercial)) = '')
-                THEN 'El nombre del comercio (nomcomred) se encuentra vacío'
+            -- Caso 3: Solo nombre vacío
+            WHEN (c.pc_nomcomred IS NULL OR LTRIM(RTRIM(c.pc_nomcomred)) = '')
+                THEN 'El nombre del comercio (nomcomred) se encuentra vacio'
 
-            WHEN (c.numero_documento IS NULL OR LTRIM(RTRIM(c.numero_documento)) = '')
-                THEN 'El número de documento (numdoc) se encuentra vacío'
+            -- Caso 4: Solo documento vacío
+            WHEN (c.pc_numdoc IS NULL OR LTRIM(RTRIM(c.pc_numdoc)) = '')
+                THEN 'El número de documento (numdoc) se encuentra vacio'
 
-            WHEN (c.numero_documento LIKE '%[^0-9]%')
-                THEN 'El número (numdoc) contiene letras'
+            -- Caso 5: Documento con letras o caracteres especiales
+            WHEN (c.pc_numdoc LIKE '%[^0-9]%')
+                THEN 'El número (numdoc) contiene letras o caracteres especiales'
 
             ELSE 'Registro no válido'
         END AS motivo
     FROM dbo.commerce c
-    WHERE c.fecha_proceso = LTRIM(RTRIM(@fecha_proceso))
+    WHERE c.pc_processdate = LTRIM(RTRIM(@pc_processdate))
       AND (
-          c.nombre_comercial IS NULL 
-          OR LTRIM(RTRIM(c.nombre_comercial)) = ''
-          OR c.numero_documento IS NULL 
-          OR LTRIM(RTRIM(c.numero_documento)) = ''
-          OR c.numero_documento LIKE '%[^0-9]%'
+          c.pc_nomcomred IS NULL 
+          OR LTRIM(RTRIM(c.pc_nomcomred)) = ''
+          OR c.pc_numdoc IS NULL 
+          OR LTRIM(RTRIM(c.pc_numdoc)) = ''
+          OR c.pc_numdoc LIKE '%[^0-9]%'
       );
 
     DECLARE @cantidad_cuarentena INT = 0;
 
+    -- Transacción atómica: inserción en cuarentena y eliminación de la tabla principal
     BEGIN TRANSACTION;
     BEGIN TRY
         INSERT INTO dbo.commerce_quarantine (
             id_comercio_origen,
-            fecha_proceso,
-            codigo_comercio,
-            nombre_comercial,
-            numero_documento,
-            tipo_documento,
-            estado,
+            pc_processdate,
+            pc_codcom,
+            pc_nomcomred,
+            pc_numdoc,
+            pc_tipdoc,
+            pc_estado,
             fecha_cuarentena,
             motivo
         )
         SELECT 
             id,
-            fecha_proceso,
-            codigo_comercio,
-            nombre_comercial,
-            numero_documento,
-            tipo_documento,
-            estado,
+            pc_processdate,
+            pc_codcom,
+            pc_nomcomred,
+            pc_numdoc,
+            pc_tipdoc,
+            pc_estado,
             GETDATE(),
             motivo
         FROM #registros_con_error;
 
         SET @cantidad_cuarentena = @@ROWCOUNT;
 
+        -- Eliminar de la tabla commerce los registros trasladados a cuarentena
         DELETE c
         FROM dbo.commerce c
         INNER JOIN #registros_con_error e ON c.id = e.id;
@@ -215,11 +227,12 @@ BEGIN
 
     DROP TABLE #registros_con_error;
 
+    -- Retorna la cantidad de registros insertados en la tabla commerce_quarantine
     SELECT @cantidad_cuarentena AS registros_en_cuarentena;
 END;
 GO
 
--- Procedimiento para listar comercios en cuarentena
+-- 5. Procedimiento para listar los comercios en cuarentena
 CREATE PROCEDURE dbo.sp_obtener_comercios_cuarentena
 AS
 BEGIN
@@ -228,12 +241,12 @@ BEGIN
     SELECT 
         id,
         id_comercio_origen,
-        fecha_proceso,
-        codigo_comercio,
-        nombre_comercial,
-        numero_documento,
-        tipo_documento,
-        estado,
+        pc_processdate,
+        pc_codcom,
+        pc_nomcomred,
+        pc_numdoc,
+        pc_tipdoc,
+        pc_estado,
         motivo,
         fecha_cuarentena
     FROM dbo.commerce_quarantine
@@ -241,24 +254,24 @@ BEGIN
 END;
 GO
 
--- Procedimiento para listar comercios vigentes
+-- 6. Procedimiento para listar los comercios vigentes
 CREATE PROCEDURE dbo.sp_obtener_comercios
-    @fecha_proceso VARCHAR(20) = NULL
+    @pc_processdate VARCHAR(20) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     SELECT 
         id,
-        fecha_proceso,
-        codigo_comercio,
-        nombre_comercial,
-        numero_documento,
-        tipo_documento,
-        estado,
+        pc_processdate,
+        pc_codcom,
+        pc_nomcomred,
+        pc_numdoc,
+        pc_tipdoc,
+        pc_estado,
         fecha_registro
     FROM dbo.commerce
-    WHERE (@fecha_proceso IS NULL OR fecha_proceso = LTRIM(RTRIM(@fecha_proceso)))
+    WHERE (@pc_processdate IS NULL OR pc_processdate = LTRIM(RTRIM(@pc_processdate)))
     ORDER BY fecha_registro DESC, id DESC;
 END;
 GO

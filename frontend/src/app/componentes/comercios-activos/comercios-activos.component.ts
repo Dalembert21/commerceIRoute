@@ -42,10 +42,10 @@ export class ComerciosActivosComponent implements OnInit {
     if (!this.terminoBusqueda.trim()) return this.listaComercios;
     const q = this.terminoBusqueda.toLowerCase().trim();
     return this.listaComercios.filter(c =>
-      (c.nombreComercial && c.nombreComercial.toLowerCase().includes(q)) ||
-      (c.numeroDocumento && c.numeroDocumento.toLowerCase().includes(q)) ||
-      (c.codigoComercio && c.codigoComercio.toLowerCase().includes(q)) ||
-      (c.fechaProceso && c.fechaProceso.toLowerCase().includes(q))
+      (c.pcNomcomred && c.pcNomcomred.toLowerCase().includes(q)) ||
+      (c.pcNumdoc && c.pcNumdoc.toLowerCase().includes(q)) ||
+      (c.pcCodcom && c.pcCodcom.toLowerCase().includes(q)) ||
+      (c.pcProcessdate && c.pcProcessdate.toLowerCase().includes(q))
     );
   }
 }

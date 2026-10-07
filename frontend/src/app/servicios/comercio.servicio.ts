@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import {
   Comercio,
   ComercioCuarentena,
@@ -14,7 +15,7 @@ import {
 })
 export class ComercioServicio {
   private http = inject(HttpClient);
-  private urlBase = 'http://localhost:5225/api/comercios';
+  private urlBase = environment.apiUrl;
 
   /**
    * Envía el archivo CSV al backend para registrarlo en la tabla commerce

@@ -1,6 +1,24 @@
 @IRouteComercioApi_HostAddress = http://localhost:5225
 
-GET {{IRouteComercioApi_HostAddress}}/weatherforecast/
+### 1. Listar comercios en cuarentena con sus motivos
+GET {{IRouteComercioApi_HostAddress}}/api/comercios/cuarentena
 Accept: application/json
+
+###
+
+### 2. Listar comercios vigentes
+GET {{IRouteComercioApi_HostAddress}}/api/comercios
+Accept: application/json
+
+###
+
+### 3. Procesar comercios por fecha (ejecuta depuración y mueve a cuarentena)
+POST {{IRouteComercioApi_HostAddress}}/api/comercios/procesar-fecha
+Content-Type: application/json
+Accept: application/json
+
+{
+  "fechaProceso": "07/10/2026"
+}
 
 ###

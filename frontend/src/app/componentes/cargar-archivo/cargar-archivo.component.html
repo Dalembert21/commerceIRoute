@@ -38,7 +38,7 @@
       
       <h3 class="titulo-subida">Arrastre el archivo CSV aquí</h3>
       <p class="descripcion-subida">
-        Formato requerido: <code>.csv</code> (Ejemplo: <code>commerce_07102026.csv</code>)
+        Formato requerido: <code>commerce_DDMMYYYY.csv</code> (Ejemplo: <code>commerce_07102026.csv</code>)
       </p>
 
       <label class="boton boton-acento boton-subir">
@@ -98,40 +98,40 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Fecha Proceso</th>
-              <th>Código Comercio</th>
-              <th>Nombre Comercial</th>
-              <th>Número Documento</th>
-              <th>Tipo Documento</th>
-              <th>Estado</th>
+              <th>pc_processdate</th>
+              <th>pc_codcom</th>
+              <th>pc_nomcomred</th>
+              <th>pc_numdoc</th>
+              <th>pc_tipdoc</th>
+              <th>pc_estado</th>
             </tr>
           </thead>
           <tbody>
             @for (fila of filasPrevisualizacion; track $index) {
               <tr>
                 <td>{{ $index + 1 }}</td>
-                <td>{{ fila.fechaProceso || '-' }}</td>
-                <td><code>{{ fila.codigoComercio || '-' }}</code></td>
+                <td>{{ fila.pcProcessdate || '-' }}</td>
+                <td><code>{{ fila.pcCodcom || '-' }}</code></td>
                 <td>
-                  @if (!fila.nombreComercial) {
+                  @if (!fila.pcNomcomred) {
                     <span class="texto-observado">[Vacío]</span>
                   } @else {
-                    {{ fila.nombreComercial }}
+                    {{ fila.pcNomcomred }}
                   }
                 </td>
                 <td>
-                  @if (!fila.numeroDocumento) {
+                  @if (!fila.pcNumdoc) {
                     <span class="texto-observado">[Vacío]</span>
-                  } @else if (contieneCaracteresInvalidos(fila.numeroDocumento)) {
-                    <span class="texto-observado">{{ fila.numeroDocumento }}</span>
+                  } @else if (contieneCaracteresInvalidos(fila.pcNumdoc)) {
+                    <span class="texto-observado">{{ fila.pcNumdoc }}</span>
                   } @else {
-                    <code>{{ fila.numeroDocumento }}</code>
+                    <code>{{ fila.pcNumdoc }}</code>
                   }
                 </td>
-                <td>{{ fila.tipoDocumento || '-' }}</td>
+                <td>{{ fila.pcTipdoc || '-' }}</td>
                 <td>
-                  <span class="insignia" [ngClass]="fila.estado === 'ACTIVO' ? 'insignia-exito' : 'insignia-alerta'">
-                    {{ fila.estado || 'PENDIENTE' }}
+                  <span class="insignia" [ngClass]="fila.pcEstado === 'ACTIVO' ? 'insignia-exito' : 'insignia-alerta'">
+                    {{ fila.pcEstado || 'PENDIENTE' }}
                   </span>
                 </td>
               </tr>

@@ -4,7 +4,9 @@ using IRouteComercioApi.Modelos;
 
 namespace IRouteComercioApi.Datos;
 
-// Repositorio que ejecuta los procedimientos almacenados en SQL Server
+/// <summary>
+/// Implementación de acceso a datos mediante ADO.NET y Stored Procedures en SQL Server.
+/// </summary>
 public class ComercioRepositorio : IComercioRepositorio
 {
     private readonly string _cadenaConexion;
@@ -15,7 +17,9 @@ public class ComercioRepositorio : IComercioRepositorio
             ?? throw new InvalidOperationException("Falta configurar la cadena ConexionSql en appsettings.json.");
     }
 
-    // Inserta un único comercio invocando sp_create_commerce
+    /// <summary>
+    /// Inserta un único registro invocando sp_create_commerce.
+    /// </summary>
     public async Task<int> CrearComercioAsync(Comercio comercio)
     {
         await using var conexion = new SqlConnection(_cadenaConexion);
@@ -24,19 +28,24 @@ public class ComercioRepositorio : IComercioRepositorio
             CommandType = CommandType.StoredProcedure
         };
 
-        comando.Parameters.AddWithValue("@fecha_proceso", (object?)comercio.FechaProceso ?? DBNull.Value);
-        comando.Parameters.AddWithValue("@codigo_comercio", (object?)comercio.CodigoComercio ?? DBNull.Value);
-        comando.Parameters.AddWithValue("@nombre_comercial", (object?)comercio.NombreComercial ?? DBNull.Value);
-        comando.Parameters.AddWithValue("@numero_documento", (object?)comercio.NumeroDocumento ?? DBNull.Value);
-        comando.Parameters.AddWithValue("@tipo_documento", (object?)comercio.TipoDocumento ?? DBNull.Value);
-        comando.Parameters.AddWithValue("@estado", (object?)comercio.Estado ?? DBNull.Value);
+        comando.Parameters.AddWithValue("@pc_processdate", (object?)comercio.PcProcessdate ?? DBNull.Value);
+        comando.Parameters.AddWithValue("@pc_codcom", (object?)comercio.PcCodcom ?? DBNull.Value);
+        comando.Parameters.AddWithValue("@pc_nomcomred", (object?)comercio.PcNomcomred ?? DBNull.Value);
+        comando.Parameters.AddWithValue("@pc_numdoc", (object?)comercio.PcNumdoc ?? DBNull.Value);
+        comando.Parameters.AddWithValue("@pc_tipdoc", (object?)comercio.PcTipdoc ?? DBNull.Value);
+        comando.Parameters.AddWithValue("@pc_estado", (object?)comercio.PcEstado ?? DBNull.Value);
 
         await conexion.OpenAsync();
         var resultado = await comando.ExecuteScalarAsync();
         return Convert.ToInt32(resultado);
     }
 
-    // Inserta la lista de comercios dentro de una transacción para evitar inconsistencias
+    /// <summary>
+    /// Registra la colección de comercios invocando sp_create_commerce por fila.
+    /// NOTA DE ARQUITECTURA: Se envuelve en una SqlTransaction para asegurar atomicidad
+    /// cumpliendo con el requisito explícito del enunciado ("mediante la invocación de un store procedure sp_create_commerce").
+    /// Para volúmenes masivos de producción (+100k registros), la alternativa recomendada es Table-Valued Parameters (TVP) o SqlBulkCopy.
+    /// </summary>
     public async Task<int> CrearComerciosLoteAsync(IEnumerable<Comercio> comercios)
     {
         await using var conexion = new SqlConnection(_cadenaConexion);
@@ -53,12 +62,12 @@ public class ComercioRepositorio : IComercioRepositorio
                     CommandType = CommandType.StoredProcedure
                 };
 
-                comando.Parameters.AddWithValue("@fecha_proceso", (object?)comercio.FechaProceso ?? DBNull.Value);
-                comando.Parameters.AddWithValue("@codigo_comercio", (object?)comercio.CodigoComercio ?? DBNull.Value);
-                comando.Parameters.AddWithValue("@nombre_comercial", (object?)comercio.NombreComercial ?? DBNull.Value);
-                comando.Parameters.AddWithValue("@numero_documento", (object?)comercio.NumeroDocumento ?? DBNull.Value);
-                comando.Parameters.AddWithValue("@tipo_documento", (object?)comercio.TipoDocumento ?? DBNull.Value);
-                comando.Parameters.AddWithValue("@estado", (object?)comercio.Estado ?? DBNull.Value);
+                comando.Parameters.AddWithValue("@pc_processdate", (object?)comercio.PcProcessdate ?? DBNull.Value);
+                comando.Parameters.AddWithValue("@pc_codcom", (object?)comercio.PcCodcom ?? DBNull.Value);
+                comando.Parameters.AddWithValue("@pc_nomcomred", (object?)comercio.PcNomcomred ?? DBNull.Value);
+                comando.Parameters.AddWithValue("@pc_numdoc", (object?)comercio.PcNumdoc ?? DBNull.Value);
+                comando.Parameters.AddWithValue("@pc_tipdoc", (object?)comercio.PcTipdoc ?? DBNull.Value);
+                comando.Parameters.AddWithValue("@pc_estado", (object?)comercio.PcEstado ?? DBNull.Value);
 
                 await comando.ExecuteNonQueryAsync();
                 totalInsertados++;
@@ -74,7 +83,9 @@ public class ComercioRepositorio : IComercioRepositorio
         }
     }
 
-    // Ejecuta el procedimiento para validar registros por fecha y enviarlos a cuarentena
+    /// <summary>
+    /// Invoca el procedimiento almacenado que valida registros y traslada observados a cuarentena.
+    /// </summary>
     public async Task<int> ProcesarComerciosPorFechaAsync(string fechaProceso)
     {
         await using var conexion = new SqlConnection(_cadenaConexion);
@@ -83,14 +94,16 @@ public class ComercioRepositorio : IComercioRepositorio
             CommandType = CommandType.StoredProcedure
         };
 
-        comando.Parameters.AddWithValue("@fecha_proceso", fechaProceso);
+        comando.Parameters.AddWithValue("@pc_processdate", fechaProceso);
 
         await conexion.OpenAsync();
         var resultado = await comando.ExecuteScalarAsync();
         return Convert.ToInt32(resultado ?? 0);
     }
 
-    // Consulta la tabla commerce_quarantine mediante store procedure
+    /// <summary>
+    /// Consulta los comercios observados en la tabla commerce_quarantine.
+    /// </summary>
     public async Task<IEnumerable<ComercioCuarentena>> ObtenerComerciosCuarentenaAsync()
     {
         var lista = new List<ComercioCuarentena>();
@@ -110,12 +123,12 @@ public class ComercioRepositorio : IComercioRepositorio
             {
                 Id = lector.GetInt32(lector.GetOrdinal("id")),
                 IdComercioOrigen = lector.IsDBNull(lector.GetOrdinal("id_comercio_origen")) ? null : lector.GetInt32(lector.GetOrdinal("id_comercio_origen")),
-                FechaProceso = lector.GetString(lector.GetOrdinal("fecha_proceso")),
-                CodigoComercio = lector.IsDBNull(lector.GetOrdinal("codigo_comercio")) ? null : lector.GetString(lector.GetOrdinal("codigo_comercio")),
-                NombreComercial = lector.IsDBNull(lector.GetOrdinal("nombre_comercial")) ? null : lector.GetString(lector.GetOrdinal("nombre_comercial")),
-                NumeroDocumento = lector.IsDBNull(lector.GetOrdinal("numero_documento")) ? null : lector.GetString(lector.GetOrdinal("numero_documento")),
-                TipoDocumento = lector.IsDBNull(lector.GetOrdinal("tipo_documento")) ? null : lector.GetString(lector.GetOrdinal("tipo_documento")),
-                Estado = lector.IsDBNull(lector.GetOrdinal("estado")) ? null : lector.GetString(lector.GetOrdinal("estado")),
+                PcProcessdate = lector.GetString(lector.GetOrdinal("pc_processdate")),
+                PcCodcom = lector.IsDBNull(lector.GetOrdinal("pc_codcom")) ? null : lector.GetString(lector.GetOrdinal("pc_codcom")),
+                PcNomcomred = lector.IsDBNull(lector.GetOrdinal("pc_nomcomred")) ? null : lector.GetString(lector.GetOrdinal("pc_nomcomred")),
+                PcNumdoc = lector.IsDBNull(lector.GetOrdinal("pc_numdoc")) ? null : lector.GetString(lector.GetOrdinal("pc_numdoc")),
+                PcTipdoc = lector.IsDBNull(lector.GetOrdinal("pc_tipdoc")) ? null : lector.GetString(lector.GetOrdinal("pc_tipdoc")),
+                PcEstado = lector.IsDBNull(lector.GetOrdinal("pc_estado")) ? null : lector.GetString(lector.GetOrdinal("pc_estado")),
                 Motivo = lector.GetString(lector.GetOrdinal("motivo")),
                 FechaCuarentena = lector.GetDateTime(lector.GetOrdinal("fecha_cuarentena"))
             });
@@ -124,7 +137,9 @@ public class ComercioRepositorio : IComercioRepositorio
         return lista;
     }
 
-    // Consulta los comercios válidos de la tabla commerce
+    /// <summary>
+    /// Consulta los comercios vigentes en la tabla commerce.
+    /// </summary>
     public async Task<IEnumerable<Comercio>> ObtenerComerciosAsync(string? fechaProceso = null)
     {
         var lista = new List<Comercio>();
@@ -135,7 +150,7 @@ public class ComercioRepositorio : IComercioRepositorio
             CommandType = CommandType.StoredProcedure
         };
 
-        comando.Parameters.AddWithValue("@fecha_proceso", (object?)fechaProceso ?? DBNull.Value);
+        comando.Parameters.AddWithValue("@pc_processdate", (object?)fechaProceso ?? DBNull.Value);
 
         await conexion.OpenAsync();
         await using var lector = await comando.ExecuteReaderAsync();
@@ -145,12 +160,12 @@ public class ComercioRepositorio : IComercioRepositorio
             lista.Add(new Comercio
             {
                 Id = lector.GetInt32(lector.GetOrdinal("id")),
-                FechaProceso = lector.GetString(lector.GetOrdinal("fecha_proceso")),
-                CodigoComercio = lector.IsDBNull(lector.GetOrdinal("codigo_comercio")) ? null : lector.GetString(lector.GetOrdinal("codigo_comercio")),
-                NombreComercial = lector.IsDBNull(lector.GetOrdinal("nombre_comercial")) ? null : lector.GetString(lector.GetOrdinal("nombre_comercial")),
-                NumeroDocumento = lector.IsDBNull(lector.GetOrdinal("numero_documento")) ? null : lector.GetString(lector.GetOrdinal("numero_documento")),
-                TipoDocumento = lector.IsDBNull(lector.GetOrdinal("tipo_documento")) ? null : lector.GetString(lector.GetOrdinal("tipo_documento")),
-                Estado = lector.IsDBNull(lector.GetOrdinal("estado")) ? null : lector.GetString(lector.GetOrdinal("estado")),
+                PcProcessdate = lector.GetString(lector.GetOrdinal("pc_processdate")),
+                PcCodcom = lector.IsDBNull(lector.GetOrdinal("pc_codcom")) ? null : lector.GetString(lector.GetOrdinal("pc_codcom")),
+                PcNomcomred = lector.IsDBNull(lector.GetOrdinal("pc_nomcomred")) ? null : lector.GetString(lector.GetOrdinal("pc_nomcomred")),
+                PcNumdoc = lector.IsDBNull(lector.GetOrdinal("pc_numdoc")) ? null : lector.GetString(lector.GetOrdinal("pc_numdoc")),
+                PcTipdoc = lector.IsDBNull(lector.GetOrdinal("pc_tipdoc")) ? null : lector.GetString(lector.GetOrdinal("pc_tipdoc")),
+                PcEstado = lector.IsDBNull(lector.GetOrdinal("pc_estado")) ? null : lector.GetString(lector.GetOrdinal("pc_estado")),
                 FechaRegistro = lector.GetDateTime(lector.GetOrdinal("fecha_registro"))
             });
         }

@@ -30,7 +30,7 @@ export class ProcesarFechaComponent implements OnInit {
     this.servicioComercio.obtenerComercios().subscribe({
       next: (resp) => {
         if (resp.exito && resp.datos) {
-          const fechas = Array.from(new Set(resp.datos.map(c => c.fechaProceso).filter(f => !!f)));
+          const fechas = Array.from(new Set(resp.datos.map(c => c.pcProcessdate).filter(f => !!f)));
           this.fechasDetectadas = fechas;
           if (fechas.length > 0 && !this.fechaProceso) {
             this.fechaProceso = fechas[0];
