@@ -66,8 +66,9 @@
   font-size: 0.8rem;
 }
 .boton-demo-chip:hover {
-  background: var(--color-primario-claro);
-  color: var(--color-primario);
+  background: var(--color-superficie-hover);
+  color: var(--color-texto);
+  border-color: var(--color-borde-fuerte);
 }
 
 .contenedor-clave {
@@ -98,8 +99,8 @@
 }
 
 .boton-ver-clave:hover {
-  color: var(--color-primario);
-  background-color: var(--color-primario-claro);
+  color: var(--color-texto);
+  background-color: var(--color-superficie-hover);
 }
 
 .boton-ver-clave:focus-visible {

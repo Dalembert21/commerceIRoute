@@ -47,13 +47,26 @@
       </label>
 
       @if (archivoSeleccionado) {
-        <div class="info-archivo">
-          <div class="detalles-archivo">
-            <span class="nombre-archivo">{{ archivoSeleccionado.name }}</span>
-            <span class="peso-archivo">{{ obtenerTamanoFormateado(archivoSeleccionado.size) }}</span>
+        <div class="archivo-cargado-contenedor">
+          <div class="archivo-cargado-info">
+            <svg class="icono-archivo" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <div class="detalles-archivo">
+              <span class="nombre-archivo">{{ archivoSeleccionado.name }}</span>
+              <span class="peso-archivo">{{ obtenerTamanoFormateado(archivoSeleccionado.size) }}</span>
+            </div>
           </div>
-          <button type="button" class="boton-quitar-archivo" (click)="quitarArchivo(inputCsv)" title="Quitar archivo">
-            &times; Quitar archivo
+          <button type="button"
+                  class="boton-descartar"
+                  (click)="quitarArchivo(inputCsv)"
+                  title="Quitar archivo">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+            <span>Quitar</span>
           </button>
         </div>
       }
@@ -85,14 +98,6 @@
             Registrar en Tabla Commerce
           }
         </button>
-
-        @if (archivoSeleccionado) {
-          <button type="button" class="boton boton-contorno ancho-completo boton-espaciado-top"
-                  [disabled]="cargando"
-                  (click)="quitarArchivo(inputCsv)">
-            Quitar / Cambiar Archivo
-          </button>
-        }
       </div>
     </div>
   </div>

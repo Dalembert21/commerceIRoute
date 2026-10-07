@@ -18,8 +18,8 @@
   background: #fafafa;
 }
 .zona-activa {
-  border-color: var(--color-acento);
-  background-color: var(--color-acento-claro);
+  border-color: var(--color-primario);
+  background-color: var(--color-superficie-hover);
 }
 .icono-subida {
   color: var(--color-acento);
@@ -38,45 +38,67 @@
 .boton-subir {
   cursor: pointer;
 }
-.info-archivo {
-  margin-top: 1rem;
-  background: white;
+.archivo-cargado-contenedor {
+  margin-top: 1.25rem;
+  background-color: var(--color-superficie);
   padding: 0.6rem 0.85rem;
-  border-radius: var(--radio-sm);
+  border-radius: var(--radio-md);
   border: 1px solid var(--color-borde);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 1rem;
+  width: 100%;
+  max-width: 420px;
+}
+.archivo-cargado-info {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+.icono-archivo {
+  color: var(--color-primario);
+  flex-shrink: 0;
 }
 .detalles-archivo {
   display: flex;
   flex-direction: column;
   font-size: 0.85rem;
   text-align: left;
+  min-width: 0;
+}
+.nombre-archivo {
+  font-weight: 600;
+  color: var(--color-texto);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .peso-archivo {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--color-texto-terciario);
 }
-.boton-quitar-archivo {
-  background: transparent;
-  border: 1px solid var(--color-peligro);
-  color: var(--color-peligro);
-  padding: 0.25rem 0.55rem;
+.boton-descartar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto-secundario);
+  padding: 0.35rem 0.65rem;
   border-radius: var(--radio-sm);
-  font-size: 0.775rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease-in-out;
   white-space: nowrap;
+  flex-shrink: 0;
 }
-.boton-quitar-archivo:hover {
-  background-color: var(--color-peligro);
-  color: #ffffff;
-}
-.boton-espaciado-top {
-  margin-top: 0.5rem;
+.boton-descartar:hover {
+  background-color: var(--color-superficie-hover);
+  color: var(--color-texto);
+  border-color: var(--color-borde-fuerte);
 }
 .panel-resumen {
   display: flex;

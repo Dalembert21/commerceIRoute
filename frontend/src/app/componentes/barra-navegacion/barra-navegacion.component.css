@@ -49,12 +49,12 @@
   transition: all 0.2s ease;
 }
 .enlace-nav:hover {
-  color: var(--color-primario);
-  background-color: var(--color-primario-claro);
+  color: var(--color-texto);
+  background-color: var(--color-superficie-hover);
 }
 .enlace-activo {
-  color: var(--color-acento);
-  background-color: var(--color-acento-claro);
+  color: #ffffff !important;
+  background-color: var(--color-primario);
   font-weight: 700;
 }
 .area-usuario {
