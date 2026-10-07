@@ -1,0 +1,17 @@
+# Build y dependencias de .NET
+bin/
+obj/
+*.user
+*.suo
+
+# Build y dependencias de Node / Angular
+node_modules/
+.angular/
+dist/
+.npm/
+
+# IDEs y SO
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
